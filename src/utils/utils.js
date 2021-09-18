@@ -6,15 +6,10 @@
 /* eslint-disable radix */
 import moment from 'moment';
 import React from 'react';
-import nzh from 'nzh/cn';
 import { parse, stringify } from 'qs';
-import EncodeUrl, { converFolder } from '@/utils/encode';
 import pathToRegexp from 'path-to-regexp';
-import getConfig from 'next/config';
 
-const { publicRuntimeConfig } = getConfig();
-
-export const isJsonString = str => {
+export const isJsonString = (str) => {
   try {
     JSON.parse(str);
   } catch (e) {
@@ -25,23 +20,6 @@ export const isJsonString = str => {
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
 }
-export const generateUrl = (names, parentName, parent, id) => {
-  let url = '';
-  if (names && parseInt(parent) === 0 && parentName === '') {
-    url = `/${EncodeUrl(names)}`;
-  }
-  if (names && parent && parseInt(parent) !== 0 && parentName !== '') {
-    url = `/${EncodeUrl(parentName)}/${EncodeUrl(names)}_${parent}`;
-  }
-  if (id) {
-    if (parseInt(parent) === 0) {
-      url = `/${EncodeUrl(names)}-${id}`;
-    } else {
-      url = `/${EncodeUrl(parentName)}/${EncodeUrl(names)}_${parent}_${id}`;
-    }
-  }
-  return url;
-};
 
 export const compare = (array1, array2) => {
   // if the other array is a falsy value, return
@@ -63,23 +41,7 @@ export const compare = (array1, array2) => {
   return true;
 };
 
-export const generateUrlSlug = names => {
-  let url = '';
-  if (names) {
-    url = `${EncodeUrl(names)}`;
-  }
-  return url;
-};
-
-export const generateUrlSlugFolder = names => {
-  let url = '';
-  if (names) {
-    url = `${converFolder(names)}`;
-  }
-  return url;
-};
-
-export const formatNumber = value => {
+export const formatNumber = (value) => {
   // eslint-disable-next-line no-param-reassign
   value += '';
   const list = value.split('.');
@@ -96,7 +58,7 @@ export const formatNumber = value => {
   return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
 };
 
-export const formatNumberWithDot = value => {
+export const formatNumberWithDot = (value) => {
   // eslint-disable-next-line no-param-reassign
   value += '';
   const list = value.split('.');
@@ -150,7 +112,11 @@ export function getTimeDistance(type) {
 
     return [
       moment(`${year}-${fixedZero(month + 1)}-01 00:00:00`),
-      moment(moment(`${nextYear}-${fixedZero(nextMonth + 1)}-01 00:00:00`).valueOf() - 1000),
+      moment(
+        moment(
+          `${nextYear}-${fixedZero(nextMonth + 1)}-01 00:00:00`
+        ).valueOf() - 1000
+      ),
     ];
   }
 
@@ -160,7 +126,7 @@ export function getTimeDistance(type) {
 
 export function getPlainNode(nodeList, parentPath = '') {
   const arr = [];
-  nodeList.forEach(node => {
+  nodeList.forEach((node) => {
     const item = node;
     item.path = `${parentPath}/${item.path || ''}`.replace(/\/+/g, '/');
     item.exact = true;
@@ -174,10 +140,6 @@ export function getPlainNode(nodeList, parentPath = '') {
     }
   });
   return arr;
-}
-
-export function digitUppercase(n) {
-  return nzh.toMoney(n);
 }
 
 function getRelation(str1, str2) {
@@ -200,9 +162,9 @@ function getRenderArr(routes) {
   renderArr.push(routes[0]);
   for (let i = 1; i < routes.length; i += 1) {
     // 去重
-    renderArr = renderArr.filter(item => getRelation(item, routes[i]) !== 1);
+    renderArr = renderArr.filter((item) => getRelation(item, routes[i]) !== 1);
     // 是否包含
-    const isAdd = renderArr.every(item => getRelation(item, routes[i]) === 3);
+    const isAdd = renderArr.every((item) => getRelation(item, routes[i]) === 3);
     if (isAdd) {
       renderArr.push(routes[i]);
     }
@@ -218,15 +180,17 @@ function getRenderArr(routes) {
  */
 export function getRoutes(path, routerData) {
   let routes = Object.keys(routerData).filter(
-    routePath => routePath.indexOf(path) === 0 && routePath !== path
+    (routePath) => routePath.indexOf(path) === 0 && routePath !== path
   );
   // Replace path to '' eg. path='user' /user/name => name
-  routes = routes.map(item => item.replace(path, ''));
+  routes = routes.map((item) => item.replace(path, ''));
   // Get the route to be rendered to remove the deep rendering
   const renderArr = getRenderArr(routes);
   // Conversion and stitching parameters
-  const renderRoutes = renderArr.map(item => {
-    const exact = !routes.some(route => route !== item && getRelation(route, item) === 1);
+  const renderRoutes = renderArr.map((item) => {
+    const exact = !routes.some(
+      (route) => route !== item && getRelation(route, item) === 1
+    );
     return {
       exact,
       ...routerData[`${path}${item}`],
@@ -250,8 +214,13 @@ export const findRouter = (routeData, pathname) => {
   }
   let routeAuthority = {};
   const getAuthority = (key, routes) => {
-    routes.map(route => {
-      if (route && route.path && route.component && pathToRegexp(route.path).test(key)) {
+    routes.map((route) => {
+      if (
+        route &&
+        route.path &&
+        route.component &&
+        pathToRegexp(route.path).test(key)
+      ) {
         routeAuthority = route;
       } else if (route && route.routes) {
         routeAuthority = getAuthority(key, route.routes);
@@ -276,7 +245,8 @@ export function getQueryPath(path = '', query = {}) {
 }
 
 /* eslint no-useless-escape:0 */
-const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
+const reg =
+  /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
 export function isUrl(path) {
   return reg.test(path);
@@ -311,11 +281,12 @@ export function formatWan(val) {
 
 // 给官方演示站点用，用于关闭真实开发环境不需要使用的特性
 export function isAntdPro() {
-  if (typeof window !== 'undefined') return window.location.hostname === 'preview.pro.ant.design';
+  if (typeof window !== 'undefined')
+    return window.location.hostname === 'preview.pro.ant.design';
   return '';
 }
 
-export const fnKhongDau = str => {
+export const fnKhongDau = (str) => {
   let str1 = str;
   str1 = str1.toLowerCase();
   str1 = str1.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
@@ -380,8 +351,16 @@ export const scrollToTopCustom = () => {
   }
 };
 
-export const isFileImage = file => {
-  const acceptedImageTypes = ['gif', 'png', 'jpg', 'svg', 'ico', 'jpeg', 'TIFF'];
+export const isFileImage = (file) => {
+  const acceptedImageTypes = [
+    'gif',
+    'png',
+    'jpg',
+    'svg',
+    'ico',
+    'jpeg',
+    'TIFF',
+  ];
   const acceptedImageTypes2 = ['scontent'];
   return (
     (file &&
@@ -392,14 +371,14 @@ export const isFileImage = file => {
   );
 };
 
-export const checkMp4File = file => {
+export const checkMp4File = (file) => {
   const allowedExtensions = /(\.mp4)$/i;
   if (!allowedExtensions.exec(file)) {
     return false;
   }
   return true;
 };
-export const checkMp4Link = file => {
+export const checkMp4Link = (file) => {
   const allowedExtensions = /(http:\/\/|https:\/\/)/;
   if (!allowedExtensions.exec(file)) {
     return false;
@@ -407,22 +386,23 @@ export const checkMp4Link = file => {
   return true;
 };
 
-export const getIdYoutube = url => {
+export const getIdYoutube = (url) => {
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
   return match && match[2].length === 11 ? match[2] : null;
 };
 
-export const checkYoutube = url => {
+export const checkYoutube = (url) => {
   let check = false;
   if (url) {
-    const patternYoutube = /(?:http?s?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(.+)/g;
+    const patternYoutube =
+      /(?:http?s?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(.+)/g;
     check = patternYoutube.test(url);
   }
   return check;
 };
 
-export const getSrcFrameYoutube = videoId => {
+export const getSrcFrameYoutube = (videoId) => {
   let srcIframe = '';
   if (videoId) {
     srcIframe = `//www.youtube.com/embed/${videoId}`;
@@ -454,7 +434,9 @@ export function HaversineInKM(lat1, long1, lat2, long2) {
   // eslint-disable-next-line no-restricted-properties
   const a =
     Math.pow(Math.sin(dlat / 2.0), 2.0) +
-    Math.cos(lat1 * _d2r) * Math.cos(lat2 * _d2r) * Math.pow(Math.sin(dlong / 2.0), 2.0);
+    Math.cos(lat1 * _d2r) *
+      Math.cos(lat2 * _d2r) *
+      Math.pow(Math.sin(dlong / 2.0), 2.0);
   const c = 2.0 * Math.atan2(Math.sqrt(a), Math.sqrt(1.0 - a));
   const d = _eQuatorialEarthRadius * c;
 
@@ -465,7 +447,7 @@ export function HaversineInM(lat1, long1, lat2, long2) {
   return 1000.0 * HaversineInKM(lat1, long1, lat2, long2);
 }
 
-export const checkImage = str => {
+export const checkImage = (str) => {
   let str1 = false;
   if (
     str &&
@@ -483,7 +465,7 @@ export const checkImage = str => {
   return str1;
 };
 
-export const checkVideo = str => {
+export const checkVideo = (str) => {
   let str1 = false;
   if (
     str &&
@@ -500,7 +482,7 @@ export const checkVideo = str => {
   return str1;
 };
 
-export const checkdoc = str => {
+export const checkdoc = (str) => {
   let str1 = false;
   if (
     fnKhongDau(str) === 'doc' ||
@@ -513,7 +495,7 @@ export const checkdoc = str => {
   return str1;
 };
 
-export const checkexcel = str => {
+export const checkexcel = (str) => {
   let str1 = false;
   if (
     fnKhongDau(str) === 'xlsx' ||
@@ -529,14 +511,14 @@ export const checkexcel = str => {
   }
   return str1;
 };
-export const viewImage = str =>
-  str && str.indexOf('http') === -1
-    ? str.indexOf('//') === 0
-      ? `http:${str}`
-      : str.indexOf('data:') === 0
-      ? str
-      : `${publicRuntimeConfig.IMAGE_SERVER}/${publicRuntimeConfig.IMAGE_PROJECT}/${str}`
-    : str;
+// export const viewImage = str =>
+//   str && str.indexOf('http') === -1
+//     ? str.indexOf('//') === 0
+//       ? `http:${str}`
+//       : str.indexOf('data:') === 0
+//       ? str
+//       : `${publicRuntimeConfig.IMAGE_SERVER}/${publicRuntimeConfig.IMAGE_PROJECT}/${str}`
+//     : str;
 
 export const getIndicesOf = (searchStr, str, caseSensitive) => {
   const searchStrLen = searchStr.length;

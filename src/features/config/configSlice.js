@@ -67,6 +67,6 @@ export const configSlice = createSlice({
 export const { filter, save, saveAll, removeAndSave, info, query } =
   configSlice.actions;
 
-export const selectCount = (state) => state.config.value;
+export const config = (state) => state.config.value;
 
 export default configSlice.reducer;

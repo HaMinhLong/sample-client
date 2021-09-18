@@ -10,7 +10,7 @@ const createMenu = (params) =>
 const updateMenu = (id, params) =>
   axios.put(`${process.env.REACT_APP_SERVER}/menu/${id}`, params);
 const updateStatusMenu = (id, params) =>
-  axios.put(`${process.env.REACT_APP_SERVER}/menu/${id}`, params);
+  axios.put(`${process.env.REACT_APP_SERVER}/menu/updateStatus/${id}`, params);
 const deleteMenu = (id) =>
   axios.delete(`${process.env.REACT_APP_SERVER}/menu/${id}`);
 

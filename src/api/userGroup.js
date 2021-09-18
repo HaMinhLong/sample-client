@@ -1,5 +1,5 @@
-import axios from "axios";
-import { stringify } from "qs";
+import axios from 'axios';
+import { stringify } from 'qs';
 
 const getListUserGroup = (params) =>
   axios.get(`${process.env.REACT_APP_SERVER}/userGroup?${stringify(params)}`);
@@ -10,7 +10,10 @@ const createUserGroup = (params) =>
 const updateUserGroup = (id, params) =>
   axios.put(`${process.env.REACT_APP_SERVER}/userGroup/${id}`, params);
 const updateStatusUserGroup = (id, params) =>
-  axios.put(`${process.env.REACT_APP_SERVER}/userGroup/${id}`, params);
+  axios.put(
+    `${process.env.REACT_APP_SERVER}/userGroup/updateStatus/${id}`,
+    params
+  );
 const deleteUserGroup = (id) =>
   axios.delete(`${process.env.REACT_APP_SERVER}/userGroup/${id}`);
 

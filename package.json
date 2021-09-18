@@ -2,6 +2,10 @@
   "name": "nar-fashion",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "project",
+    "repro-lib"
+  ],
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.1",
     "@testing-library/jest-dom": "^5.11.4",
@@ -10,6 +14,7 @@
     "antd": "^4.16.13",
     "axios": "^0.21.4",
     "jsrsasign": "^10.4.0",
+    "moment": "^2.29.1",
     "node-sass": "^6.0.1",
     "qs": "^6.10.1",
     "react": "^17.0.2",

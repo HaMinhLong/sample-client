@@ -34,7 +34,7 @@ const HeaderPage = ({ localLanguage, setLocalLanguage }) => {
           </SubMenu>
           <SubMenu key="tai-khoan" title="Tài khoản - Phân quyền">
             <Menu.Item key="4">
-              <Link to="/user-group/4">Nhóm người dùng</Link>
+              <Link to="/user-group/4">Nhóm tài khoản</Link>
             </Menu.Item>
             <Menu.Item key="5">
               <Link to="/user/5">Tài khoản</Link>

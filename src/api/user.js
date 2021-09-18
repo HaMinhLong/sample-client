@@ -10,7 +10,7 @@ const createUser = (params) =>
 const updateUser = (id, params) =>
   axios.put(`${process.env.REACT_APP_SERVER}/user/${id}`, params);
 const updateStatusUser = (id, params) =>
-  axios.put(`${process.env.REACT_APP_SERVER}/user/${id}`, params);
+  axios.put(`${process.env.REACT_APP_SERVER}/user/updateStatus/${id}`, params);
 const deleteUser = (id) =>
   axios.delete(`${process.env.REACT_APP_SERVER}/user/${id}`);
 

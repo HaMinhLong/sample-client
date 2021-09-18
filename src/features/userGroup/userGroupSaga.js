@@ -24,10 +24,10 @@ function* fetchLazyLoading({ payload, callback }) {
 }
 function* getOne({ payload: { id }, callback }) {
   const { data } = yield call(getOneUserGroup, id);
-  if (callback) callback(data);
   if (data) {
     yield put(info(data.results.list || {}));
   }
+  if (callback) callback(data);
 }
 function* create({ payload, callback }) {
   const { data } = yield call(createUserGroup, payload);
@@ -48,7 +48,7 @@ function* deleteRecord({ payload: { id }, callback }) {
 
 export function* userGroupSaga() {
   yield takeLatest('userGroup/fetch', getList);
-  yield takeLatest(info().type, getOne);
+  yield takeLatest('userGroup/getOne', getOne);
   yield takeLatest('userGroup/add', create);
   yield takeLatest('userGroup/fetchLazyLoading', fetchLazyLoading);
   yield takeLatest('userGroup/update', updateRecord);

@@ -67,6 +67,6 @@ export const Menu = createSlice({
 export const { filter, save, saveAll, removeAndSave, info, query } =
   Menu.actions;
 
-export const selectCount = (state) => state.menu.value;
+export const menu = (state) => state.menu.value;
 
 export default Menu.reducer;

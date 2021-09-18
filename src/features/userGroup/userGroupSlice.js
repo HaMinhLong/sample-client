@@ -67,6 +67,6 @@ export const userGroupSlice = createSlice({
 export const { filter, save, saveAll, removeAndSave, info, query } =
   userGroupSlice.actions;
 
-export const selectCount = (state) => state.userGroup.value;
+export const userGroup = ({ userGroup }) => userGroup;
 
 export default userGroupSlice.reducer;

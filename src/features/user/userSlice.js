@@ -67,6 +67,6 @@ export const userSlice = createSlice({
 export const { filter, save, saveAll, removeAndSave, info, query } =
   userSlice.actions;
 
-export const selectCount = (state) => state.user.value;
+export const user = (state) => state.user.value;
 
 export default userSlice.reducer;

@@ -3,7 +3,7 @@ import HeaderContent from '../../layouts/HeaderContent';
 import { FormattedMessage } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 const Config = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   return (
     <HeaderContent
