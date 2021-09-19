@@ -36,9 +36,9 @@ function* deleteRecord({ payload: { id }, callback }) {
 }
 
 export function* configSaga() {
-  yield takeLatest('Config/fetch', getList);
-  yield takeLatest('Config/add', create);
-  yield takeLatest('Config/fetchLazyLoading', fetchLazyLoading);
-  yield takeLatest('Config/update', updateRecord);
-  yield takeLatest('Config/delete', deleteRecord);
+  yield takeLatest('config/fetch', getList);
+  yield takeLatest('config/add', create);
+  yield takeLatest('config/fetchLazyLoading', fetchLazyLoading);
+  yield takeLatest('config/update', updateRecord);
+  yield takeLatest('config/delete', deleteRecord);
 }

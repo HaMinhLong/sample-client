@@ -1,5 +1,6 @@
 const Config = require('./vi-VN/Config');
 const UserGroup = require('./vi-VN/UserGroup');
+const User = require('./vi-VN/User');
 
 module.exports = {
   'app.common.validate.max300':
@@ -15,6 +16,7 @@ module.exports = {
   'app.search.placeHolder': 'Tìm kiếm theo tên {functionName}',
   'app.search.label': 'Tên {name}',
   'app.search.button': 'Tìm kiếm',
+  'app.search.status': 'Trạng thái',
   'app.common.action': '#',
   'app.common.deleteBtn.cancelText': 'Hủy',
   'app.common.statusTag.-1': 'Xóa tạm',
@@ -64,4 +66,5 @@ module.exports = {
 
   ...Config,
   ...UserGroup,
+  ...User,
 };

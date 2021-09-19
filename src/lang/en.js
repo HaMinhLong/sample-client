@@ -1,5 +1,6 @@
 const Config = require('./en-US/Config');
 const UserGroup = require('./en-US/UserGroup');
+const User = require('./en-US/User');
 
 module.exports = {
   'app.common.validate.max300':
@@ -15,6 +16,7 @@ module.exports = {
   'app.search.placeHolder': 'Search by name {functionName}',
   'app.search.label': 'Name {name}',
   'app.search.button': 'Search',
+  'app.search.status': 'Status',
   'app.common.action': '#',
   'app.common.deleteBtn.cancelText': 'Cancel',
   'app.common.statusTag.-1': 'Delete',
@@ -63,4 +65,5 @@ module.exports = {
 
   ...Config,
   ...UserGroup,
+  ...User,
 };

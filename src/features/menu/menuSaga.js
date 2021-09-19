@@ -47,11 +47,11 @@ function* deleteRecord({ payload: { id }, callback }) {
 }
 
 export function* menuSaga() {
-  yield takeLatest('Menu/fetch', getList);
-  yield takeLatest(info().type, getOne);
-  yield takeLatest('Menu/add', create);
-  yield takeLatest('Menu/fetchLazyLoading', fetchLazyLoading);
-  yield takeLatest('Menu/update', updateRecord);
-  yield takeLatest('Menu/updateStatus', updateStatus);
-  yield takeLatest('Menu/delete', deleteRecord);
+  yield takeLatest('menu/fetch', getList);
+  yield takeLatest('menu/getOne', getOne);
+  yield takeLatest('menu/add', create);
+  yield takeLatest('menu/fetchLazyLoading', fetchLazyLoading);
+  yield takeLatest('menu/update', updateRecord);
+  yield takeLatest('menu/updateStatus', updateStatus);
+  yield takeLatest('menu/delete', deleteRecord);
 }

@@ -47,11 +47,11 @@ function* deleteRecord({ payload: { id }, callback }) {
 }
 
 export function* userSaga() {
-  yield takeLatest('User/fetch', getList);
-  yield takeLatest(info().type, getOne);
-  yield takeLatest('User/add', create);
-  yield takeLatest('User/fetchLazyLoading', fetchLazyLoading);
-  yield takeLatest('User/update', updateRecord);
-  yield takeLatest('User/updateStatus', updateStatus);
-  yield takeLatest('User/delete', deleteRecord);
+  yield takeLatest('user/fetch', getList);
+  yield takeLatest('user/getOne', getOne);
+  yield takeLatest('user/add', create);
+  yield takeLatest('user/fetchLazyLoading', fetchLazyLoading);
+  yield takeLatest('user/update', updateRecord);
+  yield takeLatest('user/updateStatus', updateStatus);
+  yield takeLatest('user/delete', deleteRecord);
 }

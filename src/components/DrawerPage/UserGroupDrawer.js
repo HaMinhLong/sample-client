@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 const FormItem = Form.Item;
-const { isfullNameNnumber } = regexHelper;
+const { isFullNameNnumber } = regexHelper;
 
 const UserGroupDrawer = ({
   intl,
@@ -151,10 +151,7 @@ const UserGroupDrawer = ({
                 { id: 'app.title.update' },
                 { name: data.userGroupName }
               )
-            : intl.formatMessage(
-                { id: 'app.title.create' },
-                { name: titleDrawer }
-              )}
+            : intl.formatMessage({ id: 'app.userGroup.create.header' })}
         </h3>
       }
       placement="right"
@@ -218,7 +215,7 @@ const UserGroupDrawer = ({
             name="userGroupName"
             rules={[
               {
-                pattern: isfullNameNnumber,
+                pattern: isFullNameNnumber,
                 message: intl.formatMessage({
                   id: 'app.common.crud.validate.fomat',
                 }),

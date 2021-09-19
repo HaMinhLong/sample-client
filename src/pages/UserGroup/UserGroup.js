@@ -49,8 +49,7 @@ const UserGroup = ({ isMobile, intl }) => {
       filter: JSON.stringify({}),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes:
-        'id,userGroupName,userGroupDescriptions,status,createdAt,updatedAt',
+      attributes: 'id,userGroupName,userGroupDescriptions,status,createdAt',
     };
     let values = {};
     if (query && query.filter && query.filter !== '{}') {
@@ -158,8 +157,7 @@ const UserGroup = ({ isMobile, intl }) => {
         pagination.current * pagination.pageSize,
       ]),
       sort: JSON.stringify(sort),
-      attributes:
-        'id,userGroupName,userGroupDescriptions,status,createdAt,updatedAt',
+      attributes: 'id,userGroupName,userGroupDescriptions,status,createdAt',
     };
     dispatch(filter(queryFilter));
     dispatch({
@@ -202,8 +200,7 @@ const UserGroup = ({ isMobile, intl }) => {
       filter: JSON.stringify(queryName),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes:
-        'id,userGroupName,userGroupDescriptions,status,createdAt,updatedAt',
+      attributes: 'id,userGroupName,userGroupDescriptions,status,createdAt',
     };
     dispatch(filter(values));
     dispatch({
@@ -518,7 +515,7 @@ const UserGroup = ({ isMobile, intl }) => {
       dataIndex: null,
       title: intl.formatMessage({ id: 'app.common.action' }),
       align: 'center',
-      width: !isMobile ? '9%' : 170,
+      width: !isMobile ? '15%' : 170,
       render: (cell, row) => (
         <React.Fragment>
           <div style={{ display: 'flex', justifyContent: 'center' }}>

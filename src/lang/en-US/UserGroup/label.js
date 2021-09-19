@@ -3,7 +3,7 @@ module.exports = {
   'app.userGroup.list.title': 'user group',
   'app.userGroup.list.header': 'Manage user groups',
   'app.userGroup.update.header': 'Edit user group',
-  'app.userGroup.create.header': 'Add user group',
+  'app.userGroup.create.header': 'Add new user group',
 
   // Tiêu đề các cột
   'app.userGroup.list.col0': 'User group name',
