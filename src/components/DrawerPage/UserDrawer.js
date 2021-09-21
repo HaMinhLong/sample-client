@@ -14,7 +14,8 @@ import { FormattedMessage } from 'react-intl';
 import UserGroupSelect from '../Common/UserGroupSelect';
 
 const FormItem = Form.Item;
-const { isFullNameNnumber, isFullName, isPhone, isEmail } = regexHelper;
+const { isFullNameNnumber, isFullName, isPhone, isEmail, isPassword } =
+  regexHelper;
 
 const UserGroupDrawer = ({
   intl,
@@ -202,7 +203,7 @@ const UserGroupDrawer = ({
             email: data.email || '',
             mobile: data.mobile || '',
             userGroupId: data.userGroupId || '',
-            status: data.id ? data.status : 1,
+            status: data.id ? data.status : -2,
           }}
           ref={formRef}
           layout="vertical"
@@ -252,9 +253,9 @@ const UserGroupDrawer = ({
               name="password"
               rules={[
                 {
-                  pattern: isFullNameNnumber,
+                  pattern: isPassword,
                   message: intl.formatMessage({
-                    id: 'app.common.crud.validate.fomat',
+                    id: 'app.common.crud.validate.password',
                   }),
                 },
                 {
@@ -265,7 +266,7 @@ const UserGroupDrawer = ({
                 },
               ]}
             >
-              <Input
+              <Input.Password
                 placeholder={intl.formatMessage({
                   id: 'app.user.list.password',
                 })}
@@ -386,7 +387,7 @@ const UserGroupDrawer = ({
             // {...formItemLayout}
             hidden
             name="status"
-            valuePropName="checked"
+            // valuePropName="checked"
           >
             <Input />
           </FormItem>

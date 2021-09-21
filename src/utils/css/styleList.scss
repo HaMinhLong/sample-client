@@ -170,6 +170,9 @@ $screen-xs: 576px;
   border: 1px solid #e0e7ee;
 }
 
+.ant-btn.btn_statusAn.notActivated {
+  width: 140px;
+}
 .ant-btn.btn_statusAn {
   background: #f6f7f9 0% 0% no-repeat padding-box;
   color: #252525;

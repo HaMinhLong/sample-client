@@ -30,7 +30,7 @@ import UserGroupSelect from '../../components/Common/UserGroupSelect';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
-const PAGE_SIZE = 20;
+const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
 const User = ({ isMobile, intl }) => {
   const dispatch = useDispatch();
   const list = useSelector(user);
@@ -356,6 +356,9 @@ const User = ({ isMobile, intl }) => {
                 <Select.Option key={-1}>
                   {intl.formatMessage({ id: 'app.common.statusTag.-1' })}
                 </Select.Option>
+                <Select.Option key={-2}>
+                  {intl.formatMessage({ id: 'app.common.statusTag.-2' })}
+                </Select.Option>
               </Select>
             </FormItem>
           </Col>
@@ -449,6 +452,10 @@ const User = ({ isMobile, intl }) => {
         status: -1,
         name: intl.formatMessage({ id: 'app.common.statusTag.-1' }),
       },
+      {
+        status: -2,
+        name: intl.formatMessage({ id: 'app.common.statusTag.-2' }),
+      },
     ];
 
     const statusList = menuStatus.filter((x) => x.status !== cell);
@@ -477,6 +484,15 @@ const User = ({ isMobile, intl }) => {
                 </Menu.Item>
               );
             if (item.status === -1)
+              return (
+                <Menu.Item
+                  key={item.status}
+                  onClick={() => handleStatus(item.status, row)}
+                >
+                  <div>{item.name}</div>
+                </Menu.Item>
+              );
+            if (item.status === -2)
               return (
                 <Menu.Item
                   key={item.status}
@@ -514,6 +530,13 @@ const User = ({ isMobile, intl }) => {
       btn = (
         <Button className="btn_statusAn">
           {intl.formatMessage({ id: 'app.common.statusTag.-1' })}
+          <img src={dropdownBlack} alt="icon drop down" />
+        </Button>
+      );
+    } else if (cell === -2) {
+      btn = (
+        <Button className="btn_statusAn notActivated">
+          {intl.formatMessage({ id: 'app.common.statusTag.-2' })}
           <img src={dropdownBlack} alt="icon drop down" />
         </Button>
       );
@@ -604,7 +627,7 @@ const User = ({ isMobile, intl }) => {
       name: 'status',
       title: <FormattedMessage id="app.user.list.col5" />,
       align: 'center',
-      width: !isMobile ? '9%' : 170,
+      width: !isMobile ? '12%' : 170,
       sorter: () => {},
       render: (cell, row) => (
         <React.Fragment>{renderStatusButton(cell, row)}</React.Fragment>

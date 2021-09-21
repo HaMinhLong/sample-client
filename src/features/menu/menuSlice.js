@@ -67,6 +67,6 @@ export const Menu = createSlice({
 export const { filter, save, saveAll, removeAndSave, info, query } =
   Menu.actions;
 
-export const menu = (state) => state.menu.value;
+export const menu = ({ menu }) => menu;
 
 export default Menu.reducer;

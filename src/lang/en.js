@@ -1,6 +1,7 @@
 const Config = require('./en-US/Config');
 const UserGroup = require('./en-US/UserGroup');
 const User = require('./en-US/User');
+const Menu = require('./en-US/Menu');
 
 module.exports = {
   'app.common.validate.max300':
@@ -20,12 +21,14 @@ module.exports = {
   'app.common.action': '#',
   'app.common.deleteBtn.cancelText': 'Cancel',
   'app.common.statusTag.-1': 'Delete',
-  'app.common.statusTag.-2': 'Pending',
+  'app.common.statusTag.-2': 'Not activated',
+  'app.common.statusTag.-3': 'Pending',
   'app.common.statusTag.1': 'Activated',
   'app.common.statusTag.0': 'Hide',
   'app.common.status.placeholder': 'Status search',
   'app.common.type.placeholder': 'Search {name}',
   'app.common.placeholder.dateCreated': 'Date created',
+  'app.common.placeholder.dateUpdated': 'Date updated',
   'app.common.placeholder.rangepicker.0': 'Start day',
   'app.common.placeholder.rangepicker.1': 'End date',
   'app.common.crudBtns.0': 'Come back',
@@ -47,13 +50,18 @@ module.exports = {
     'Please enter between 3 and 50 characters including letters, numbers /-, and starting with a letter',
   'app.common.crud.validate.fomat':
     'Please enter between 3 and 50 characters including letters, numbers and starting with a letter',
+  'app.common.crud.validate.nameUrl':
+    'Please enter at least 3 characters including letters and special characters',
   'app.common.crud.validate.fomatNew':
     'Please enter at least 3 characters including letters, numbers and starting with a letter',
   'app.common.crud.validate.formatName':
     'Please enter at least 3 characters including letters, numbers and unsigned special characters',
   'app.common.crud.validate.url': 'Please enter correct url format',
   'app.common.crud.validate.phone': 'Please enter correct phone number format',
+  'app.common.crud.validate.number': 'Please enter correct number format',
   'app.common.crud.validate.email': 'Please enter correct email format',
+  'app.common.crud.validate.password':
+    'Please enter a password containing at least 6 characters, including letters and numbers',
   'app.common.crud.validate.phone_email':
     'Please enter the correct phone number or email format',
   'app.common.crud.validate.type':
@@ -66,4 +74,5 @@ module.exports = {
   ...Config,
   ...UserGroup,
   ...User,
+  ...Menu,
 };

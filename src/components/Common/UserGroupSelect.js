@@ -23,6 +23,7 @@ const UserGroupSelect = ({
   getAll,
 }) => {
   const dispatch = useDispatch();
+
   const [valueState, setValueState] = useState(value);
   const [loading, setLoading] = useState(false);
   const [dataArr, setDataArr] = useState([]);

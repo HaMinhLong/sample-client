@@ -55,6 +55,7 @@ p {
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 1;
 }
 .ant-menu-item,
 .ant-menu-item:hover {
@@ -64,6 +65,7 @@ p {
     a {
       font-weight: 700;
       color: #fff;
+      font-size: 12px;
     }
   }
 }
@@ -85,6 +87,7 @@ p {
   .ant-menu-title-content {
     font-weight: 700;
     color: #fff;
+    font-size: 12px;
     a {
       font-weight: 600;
       color: #000;
@@ -130,11 +133,12 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  z-index: 1;
 }
 .header-content {
   h1 {
     margin-bottom: 0px;
     text-transform: uppercase;
-    font-weight: bold;
+    font-weight: 600;
   }
 }

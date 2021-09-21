@@ -1,6 +1,7 @@
 const Config = require('./vi-VN/Config');
 const UserGroup = require('./vi-VN/UserGroup');
 const User = require('./vi-VN/User');
+const Menu = require('./vi-VN/Menu');
 
 module.exports = {
   'app.common.validate.max300':
@@ -20,12 +21,14 @@ module.exports = {
   'app.common.action': '#',
   'app.common.deleteBtn.cancelText': 'Hủy',
   'app.common.statusTag.-1': 'Xóa tạm',
-  'app.common.statusTag.-2': 'Chờ duyệt',
+  'app.common.statusTag.-2': 'Chờ kích hoạt',
+  'app.common.statusTag.-3': 'Chờ duyệt',
   'app.common.statusTag.1': 'Kích hoạt',
   'app.common.statusTag.0': 'Ẩn',
   'app.common.status.placeholder': 'Tìm kiếm trạng thái',
   'app.common.type.placeholder': 'Tìm kiếm {name}',
   'app.common.placeholder.dateCreated': 'Ngày tạo',
+  'app.common.placeholder.dateUpdated': 'Ngày cập nhật',
   'app.common.placeholder.rangepicker.0': 'Ngày bắt đầu',
   'app.common.placeholder.rangepicker.1': 'Ngày kết thúc',
   'app.common.crudBtns.0': 'Quay lại',
@@ -50,11 +53,16 @@ module.exports = {
     'Vui lòng nhập từ 3 đến 50 ký tự bao gồm chữ, số và bắt đầu bằng chữ cái',
   'app.common.crud.validate.fomatNew':
     'Vui lòng nhập ít nhất 3 ký tự bao gồm chữ, số và bắt đầu bằng chữ cái',
+  'app.common.crud.validate.nameUrl':
+    'Vui lòng nhập ít nhất 3 ký tự bao gồm chữ và ký tự đặc biệt',
   'app.common.crud.validate.formatName':
     'Vui lòng nhập ít nhát 3 ký tự bao gồm chữ, số và ký tự đặc biệt không dấu',
   'app.common.crud.validate.url': 'Vui lòng nhập đúng định dạng url',
+  'app.common.crud.validate.number': 'Vui lòng nhập đúng định dạng số',
   'app.common.crud.validate.phone': 'Vui lòng nhập đúng định dạng sđt',
   'app.common.crud.validate.email': 'Vui lòng nhập đúng định dạng email',
+  'app.common.crud.validate.password':
+    'Vui lòng nhập mật khẩu chứa ít nhất 6 ký tự, bao gồm chữ cái và số',
   'app.common.crud.validate.phone_email':
     'Vui lòng nhập đúng định dạng số điện thoại hoặc email',
   'app.common.crud.validate.type':
@@ -67,4 +75,5 @@ module.exports = {
   ...Config,
   ...UserGroup,
   ...User,
+  ...Menu,
 };

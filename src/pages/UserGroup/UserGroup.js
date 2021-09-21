@@ -29,7 +29,7 @@ import UserGroupDrawer from '../../components/DrawerPage/UserGroupDrawer';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
-const PAGE_SIZE = 20;
+const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
 const UserGroup = ({ isMobile, intl }) => {
   const dispatch = useDispatch();
   const list = useSelector(userGroup);
@@ -411,6 +411,7 @@ const UserGroup = ({ isMobile, intl }) => {
                   <div>{item.name}</div>
                 </Menu.Item>
               );
+
             return (
               <Menu.Item
                 key={item.status}
