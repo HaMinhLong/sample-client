@@ -243,6 +243,8 @@ const Menu = ({ isMobile, intl }) => {
           setCurrent(res.results && res.results.pagination.current);
           setPageSize(res.results && res.results.pagination.pageSize);
           setTotal(res.results && res.results.pagination.total);
+        } else {
+          openNotification('error', res && res.message, '#fff1f0');
         }
       },
     });
@@ -254,7 +256,7 @@ const Menu = ({ isMobile, intl }) => {
       payload: { id: item.id },
       callback: (res) => {
         setDataEdit(item);
-        setVisibleDrawer(!visibleDrawer);
+        setVisibleDrawer(true);
         setDataTree(res.results.list[0]);
       },
     });
@@ -468,11 +470,19 @@ const Menu = ({ isMobile, intl }) => {
           setCurrent(res.results && res.results.pagination.current);
           setPageSize(res.results && res.results.pagination.pageSize);
           setTotal(res.results && res.results.pagination.total);
+        } else {
+          openNotification('error', res && res.message, '#fff1f0');
         }
       },
     });
   };
-
+  const openNotification = (type, message, color) => {
+    notification[type]({
+      message: message,
+      placement: 'bottomRight',
+      style: { background: color },
+    });
+  };
   const handleSearch = (values) => {
     const queries = setFilter(values);
     const query = {
@@ -652,6 +662,8 @@ const Menu = ({ isMobile, intl }) => {
           setCurrent(res.results && res.results.pagination.current);
           setPageSize(res.results && res.results.pagination.pageSize);
           setTotal(res.results && res.results.pagination.total);
+        } else {
+          openNotification('error', res && res.message, '#fff1f0');
         }
       },
     });
@@ -674,12 +686,15 @@ const Menu = ({ isMobile, intl }) => {
       callback: (result) => {
         setLoading(false);
         if (result && result.success === true) {
-          notification.success({
-            message: intl.formatMessage({ id: 'app.common.edit.success' }),
-            placement: 'bottomRight',
-            style: { background: '#f6ffed' },
-          });
+          openNotification(
+            'success',
+            intl.formatMessage({ id: 'app.common.edit.success' }),
+            '#f6ffed'
+          );
+
           getList();
+        } else {
+          openNotification('error', result && result.message, '#fff1f0');
         }
       },
     });
@@ -741,14 +756,15 @@ const Menu = ({ isMobile, intl }) => {
           },
           callback: (result) => {
             if (result && result.success === true) {
-              notification.success({
-                message: intl.formatMessage({ id: 'app.common.edit.success' }),
-                placement: 'bottomRight',
-                style: { background: '#f6ffed' },
-              });
+              openNotification(
+                'error',
+                intl.formatMessage({ id: 'app.common.edit.success' }),
+                '#f6ffed'
+              );
               getList();
             } else if (result && result.success === false) {
               setLoading(false);
+              openNotification('error', result && result.message, '#fff1f0');
             }
           },
         });
@@ -852,17 +868,13 @@ const Menu = ({ isMobile, intl }) => {
           payload: params,
           callback: (result) => {
             if (result && result.success === false) {
-              notification.error({
-                message: result && result.message,
-                placement: 'bottomRight',
-                style: { background: '#fff1f0' },
-              });
+              openNotification('error', result && result.message, '#fff1f0');
             } else if (result) {
-              notification.success({
-                message: intl.formatMessage({ id: 'app.common.edit.success' }),
-                placement: 'bottomRight',
-                style: { background: '#f6ffed' },
-              });
+              openNotification(
+                'success',
+                intl.formatMessage({ id: 'app.common.edit.success' }),
+                '#f6ffed'
+              );
               getList();
             }
             setLoading(false);
@@ -1033,11 +1045,11 @@ const Menu = ({ isMobile, intl }) => {
           className="buttonModalFilter"
           onClick={() => setVisibleFilter(true)}
         >
-          Tìm kiếm&nbsp;
+          {intl.formatMessage({ id: 'app.common.searchBtn' })}&nbsp;
           <img width="25" height="25" src={filterIcon} alt="tìm kiếm" />
         </div>
         <Modal
-          title="Tìm kiếm"
+          title={intl.formatMessage({ id: 'app.common.searchBtn' })}
           width="100%"
           style={{ top: 0 }}
           maskStyle={{
@@ -1053,7 +1065,7 @@ const Menu = ({ isMobile, intl }) => {
         <div className="renderTree">
           <Row className="dragtreeTitle">
             <Col sm={10} className="row_8" style={{ color: '#fff' }}>
-              Tên thanh công cụ
+              {intl.formatMessage({ id: 'app.menu.list.col0' })}
             </Col>
             <Col sm={3} className="row_3" style={{ color: '#fff' }}>
               {intl.formatMessage({ id: 'app.common.placeholder.dateCreated' })}
@@ -1111,6 +1123,7 @@ const Menu = ({ isMobile, intl }) => {
         titleDrawer={intl.formatMessage({ id: 'app.user.list.title' })}
         dataEdit={dataEdit}
         dataTree={dataTree}
+        resetVisible={() => setVisibleDrawer(false)}
         getList={getList}
       />
     </>

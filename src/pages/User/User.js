@@ -81,6 +81,9 @@ const User = ({ isMobile, intl }) => {
       payload: params,
       callback: (res) => {
         setLoading(false);
+        if (res.success === false) {
+          openNotification('error', res && res.message, '#fff1f0');
+        }
       },
     });
   };
@@ -727,11 +730,11 @@ const User = ({ isMobile, intl }) => {
           className="buttonModalFilter"
           onClick={() => setVisibleFilter(true)}
         >
-          Tìm kiếm&nbsp;
+          {intl.formatMessage({ id: 'app.common.searchBtn' })}&nbsp;
           <img width="25" height="25" src={filterIcon} alt="tìm kiếm" />
         </div>
         <Modal
-          title="Tìm kiếm"
+          title={intl.formatMessage({ id: 'app.common.searchBtn' })}
           width="100%"
           style={{ top: 0 }}
           maskStyle={{

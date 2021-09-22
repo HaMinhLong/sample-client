@@ -25,6 +25,7 @@ const MenuDrawer = ({
   isMobile,
   getList,
   dataTree,
+  resetVisible,
 }) => {
   const dispatch = useDispatch();
   const list = useSelector(menu);
@@ -38,11 +39,11 @@ const MenuDrawer = ({
   useEffect(() => {
     if (!visible && checkFirst) {
       setCheckFirst(false);
-    } else {
+    } else if (visible) {
       changeDrawer('show');
       getOne(dataEdit && dataEdit.id);
     }
-  }, [dataEdit]);
+  }, [visible]);
 
   const getOne = (id) => {
     if (id) {
@@ -80,7 +81,7 @@ const MenuDrawer = ({
         const addItem = {
           ...values,
           menuName: values.menuName && values.menuName.trim(),
-          menuNameOld: values.menuName && values.menuName.trim(),
+          menuNameOld: data.menuName,
           parentId: values.parentId || null,
         };
         console.log('addItem', addItem);
@@ -147,6 +148,7 @@ const MenuDrawer = ({
     } else if (value === 'close') {
       setVisibleDrawer(false);
       setData({});
+      resetVisible();
     }
   };
   const filterData = (data, id) => {
@@ -264,7 +266,9 @@ const MenuDrawer = ({
             <MenuTreeSelect
               dataTree={dataTree}
               mode="default"
-              placeholder="Chọn cấp trên"
+              placeholder={intl.formatMessage({
+                id: 'app.menu.list.menuParent',
+              })}
               allowClear
               onChange={(value) => {
                 formRef.current.setFieldsValue({

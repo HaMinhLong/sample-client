@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TreeSelect, Spin } from 'antd';
+import { TreeSelect } from 'antd';
 import { useDispatch } from 'react-redux';
 import { fnKhongDau } from '../../utils/utils';
 import _ from 'lodash';
@@ -31,7 +31,7 @@ const MenuTreeSelect = ({
   const [checkState, setCheckState] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [text, setText] = useState(textProps);
-  const [menuParentId, setMenuParentId] = useState('');
+  // const [menuParentId, setMenuParentId] = useState('');
   const [dataStore, setDataStore] = useState([]);
 
   useEffect(() => {
@@ -66,6 +66,7 @@ const MenuTreeSelect = ({
     let tfilter = {};
     tfilter = {
       menuName: string || searchValue,
+      status: 1,
     };
     if (
       !(string || searchValue) ||

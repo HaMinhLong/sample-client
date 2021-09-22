@@ -7,7 +7,10 @@ module.exports = {
 
   // Tiêu đề các cột
   'app.menu.list.col0': 'Menu name',
+  'app.menu.list.col1': 'Superior name',
   'app.menu.list.col2': 'Status',
+  'app.menu.list.col3': 'Icon',
+  'app.menu.list.col4': 'Url',
 
   // search
   'app.menu.search.col0': 'Search by menu name',

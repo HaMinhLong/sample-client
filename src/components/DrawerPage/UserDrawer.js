@@ -77,6 +77,7 @@ const UserGroupDrawer = ({
         const addItem = {
           ...values,
           username: values.username && values.username.trim(),
+          usernameOld: data.username,
           fullName: values.fullName && values.fullName.trim(),
         };
         if (data.id) {
