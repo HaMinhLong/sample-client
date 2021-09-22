@@ -2,6 +2,7 @@ const Config = require('./vi-VN/Config');
 const UserGroup = require('./vi-VN/UserGroup');
 const User = require('./vi-VN/User');
 const Menu = require('./vi-VN/Menu');
+const UserGroupRole = require('./vi-VN/UserGroupRole');
 
 module.exports = {
   'app.common.validate.max300':
@@ -10,6 +11,7 @@ module.exports = {
   'app.tooltip.remove': 'Xóa',
   'app.tooltip.edit': 'Sửa',
   'app.title.export': 'Lập điểm tin',
+  'app.user.permissions': 'Cấp quyền',
   'app.title.create': 'Thêm mới {name}',
   'app.title.update': 'Sửa thông tin {name}',
   'app.confirm.remove': 'Bạn có chắc chắn muốn xóa bản ghi?',
@@ -40,6 +42,7 @@ module.exports = {
   'app.common.edit.success': 'Cập nhật thông tin thành công!',
   'app.common.export.success': 'Xuất thống kê {name} thành công!',
   'app.common.create.success': 'Thêm mới {name} thành công!',
+  'app.common.permissions.success': 'Cấp quyền thành công!',
   'app.common.error.server.msg': 'Có lỗi xảy ra!',
   'app.common.crud.error.update.change':
     'Vui lòng thay đổi thông tin ít nhất 1 trường',
@@ -76,4 +79,5 @@ module.exports = {
   ...UserGroup,
   ...User,
   ...Menu,
+  ...UserGroupRole,
 };

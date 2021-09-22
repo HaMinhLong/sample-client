@@ -145,7 +145,6 @@ const UserGroupDrawer = ({
       setData({});
     }
   };
-  console.log('data', data);
   return (
     <Drawer
       title={

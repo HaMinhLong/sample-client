@@ -206,7 +206,6 @@ const UserGroupSelect = ({
       </Select.Option>
     ));
   const dataRender = renderData(dataArr);
-  console.log('dataRender', dataRender);
   return (
     <React.Fragment>
       <Select

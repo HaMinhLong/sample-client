@@ -26,6 +26,7 @@ import dropdownWhite from '../../static/web/images/dropDown_white.svg';
 import dropdownBlack from '../../static/web/images/dropDown_black.svg';
 import { formatNumber } from '../../utils/utils';
 import UserGroupDrawer from '../../components/DrawerPage/UserGroupDrawer';
+import { Redirect } from 'react-router-dom';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -37,10 +38,14 @@ const UserGroup = ({ isMobile, intl }) => {
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
+  const [redirect, setRedirect] = useState('');
   useEffect(() => {
     getList();
   }, []);
 
+  if (redirect) {
+    return <Redirect to={redirect} />;
+  }
   const getList = () => {
     const { query } = list;
     const queryFilter = list.filter;
@@ -568,6 +573,27 @@ const UserGroup = ({ isMobile, intl }) => {
                   <FormattedMessage id="app.tooltip.remove" />
                 </Button>
               </Popconfirm>
+            </Tooltip>
+            <Tooltip
+              title={
+                !isMobile && intl.formatMessage({ id: 'app.user.permissions' })
+              }
+            >
+              <Button
+                onClick={() => setRedirect(`/grant-permissions/${row.id}`)}
+                icon={
+                  <i
+                    className="fas fa-clipboard-list"
+                    style={{ marginRight: '5px' }}
+                  />
+                }
+                className="btn_edit"
+                type="ghost"
+                shape="circle"
+                style={{ marginLeft: '5px' }}
+              >
+                {intl.formatMessage({ id: 'app.user.permissions' })}
+              </Button>
             </Tooltip>
           </div>
         </React.Fragment>
