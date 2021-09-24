@@ -1,5 +1,5 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
-import { save, info, query } from './configSlice';
+import { save, query } from './configSlice';
 import {
   getListConfig,
   createConfig,

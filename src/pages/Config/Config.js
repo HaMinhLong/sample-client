@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import setting from '../../static/web/images/setting-512.png';
 import './config.scss';
+import { useParams } from 'react-router-dom';
 import regexHelper from '../../utils/regexHelper';
 const { isEmail } = regexHelper;
 const FormItem = Form.Item;
@@ -12,13 +13,37 @@ const FormItem = Form.Item;
 const PAGE_SIZE = 1;
 
 const Config = ({ isMobile, intl }) => {
+  let { id } = useParams();
+  const userGroupId = localStorage.getItem('userGroupId');
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
   const title = intl.formatMessage({ id: 'app.config.list.title.title' });
+  const [permissions, setPermissions] = useState({});
   useEffect(() => {
     getConfig();
+    getPermission();
   }, []);
+  const getPermission = () => {
+    const params = {
+      filter: JSON.stringify({ userGroupId: userGroupId }),
+    };
+    dispatch({
+      type: 'userGroupRole/getOne',
+      payload: {
+        id: id,
+        params: params,
+      },
+      callback: (res) => {
+        if (res && res.success) {
+          const { list } = res.results;
+          setPermissions(list);
+        } else {
+          openNotification('error', res && res.message, '#fff1f0');
+        }
+      },
+    });
+  };
   const getConfig = () => {
     let params = {
       filter: JSON.stringify({}),
@@ -261,26 +286,28 @@ const Config = ({ isMobile, intl }) => {
                     })}
                   />
                 </FormItem>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    marginTop: 20,
-                  }}
-                >
-                  <Button
-                    type="primary"
-                    icon={
-                      <i
-                        className="fa fa-save"
-                        style={{ marginRight: '5px' }}
-                      />
-                    }
-                    htmlType="submit"
+                {permissions.isUpdate && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      marginTop: 20,
+                    }}
                   >
-                    {intl.formatMessage({ id: 'app.common.crudBtns.2' })}
-                  </Button>
-                </div>
+                    <Button
+                      type="primary"
+                      icon={
+                        <i
+                          className="fa fa-save"
+                          style={{ marginRight: '5px' }}
+                        />
+                      }
+                      htmlType="submit"
+                    >
+                      {intl.formatMessage({ id: 'app.common.crudBtns.2' })}
+                    </Button>
+                  </div>
+                )}
               </Form>
             </Col>
           </Row>

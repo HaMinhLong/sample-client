@@ -11,8 +11,8 @@ const initialState = {
   filter: {},
 };
 
-export const Menu = createSlice({
-  name: 'menu',
+export const authSlice = createSlice({
+  name: 'auth',
   initialState,
   reducers: {
     save: (state, action) => {
@@ -65,8 +65,8 @@ export const Menu = createSlice({
 });
 
 export const { filter, save, saveAll, removeAndSave, info, query } =
-  Menu.actions;
+  authSlice.actions;
 
-export const menu = ({ menu }) => menu;
+export const auth = ({ auth }) => auth;
 
-export default Menu.reducer;
+export default authSlice.reducer;

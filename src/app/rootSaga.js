@@ -4,6 +4,7 @@ import { userSaga } from '../features/user/userSaga';
 import { menuSaga } from '../features/menu/menuSaga';
 import { configSaga } from '../features/config/configSaga';
 import { userGroupRoleSaga } from '../features/userGroupRole/userGroupRoleSaga';
+import { authSaga } from '../features/auth/authSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -12,5 +13,6 @@ export default function* rootSaga() {
     menuSaga(),
     configSaga(),
     userGroupRoleSaga(),
+    authSaga(),
   ]);
 }

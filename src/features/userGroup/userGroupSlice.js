@@ -28,7 +28,7 @@ export const userGroupSlice = createSlice({
     saveAll(state, action) {
       return {
         ...state,
-        dataAll: action.payload && action.payload.result,
+        dataAll: action.payload && action.payload.results,
       };
     },
     removeAndSave(state, action) {

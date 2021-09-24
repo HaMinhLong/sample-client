@@ -27,21 +27,46 @@ import dropdownBlack from '../../static/web/images/dropDown_black.svg';
 import { formatNumber } from '../../utils/utils';
 import UserDrawer from '../../components/DrawerPage/UserDrawer';
 import UserGroupSelect from '../../components/Common/UserGroupSelect';
+import { useParams } from 'react-router-dom';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
 const User = ({ isMobile, intl }) => {
+  let { id } = useParams();
+  const userGroupId = localStorage.getItem('userGroupId');
   const dispatch = useDispatch();
   const list = useSelector(user);
   const [loading, setLoading] = useState(false);
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
+  const [permissions, setPermissions] = useState({});
   useEffect(() => {
     getList();
+    getPermission();
   }, []);
 
+  const getPermission = () => {
+    const params = {
+      filter: JSON.stringify({ userGroupId: userGroupId }),
+    };
+    dispatch({
+      type: 'userGroupRole/getOne',
+      payload: {
+        id: id,
+        params: params,
+      },
+      callback: (res) => {
+        if (res && res.success) {
+          const { list } = res.results;
+          setPermissions(list);
+        } else {
+          openNotification('error', res && res.message, '#fff1f0');
+        }
+      },
+    });
+  };
   const getList = () => {
     const { query } = list;
     const queryFilter = list.filter;
@@ -479,30 +504,36 @@ const User = ({ isMobile, intl }) => {
               );
             if (item.status === 0)
               return (
-                <Menu.Item
-                  key={item.status}
-                  onClick={() => handleStatus(item.status, row)}
-                >
-                  <div>{item.name}</div>
-                </Menu.Item>
+                permissions.isBlock && (
+                  <Menu.Item
+                    key={item.status}
+                    onClick={() => handleStatus(item.status, row)}
+                  >
+                    <div>{item.name}</div>
+                  </Menu.Item>
+                )
               );
             if (item.status === -1)
               return (
-                <Menu.Item
-                  key={item.status}
-                  onClick={() => handleStatus(item.status, row)}
-                >
-                  <div>{item.name}</div>
-                </Menu.Item>
+                permissions.isDelete && (
+                  <Menu.Item
+                    key={item.status}
+                    onClick={() => handleStatus(item.status, row)}
+                  >
+                    <div>{item.name}</div>
+                  </Menu.Item>
+                )
               );
             if (item.status === -2)
               return (
-                <Menu.Item
-                  key={item.status}
-                  onClick={() => handleStatus(item.status, row)}
-                >
-                  <div>{item.name}</div>
-                </Menu.Item>
+                permissions.isApprove && (
+                  <Menu.Item
+                    key={item.status}
+                    onClick={() => handleStatus(item.status, row)}
+                  >
+                    <div>{item.name}</div>
+                  </Menu.Item>
+                )
               );
             return (
               <Menu.Item
@@ -644,52 +675,56 @@ const User = ({ isMobile, intl }) => {
       render: (cell, row) => (
         <React.Fragment>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Tooltip
-              title={
-                !isMobile && intl.formatMessage({ id: 'app.tooltip.edit' })
-              }
-            >
-              <Button
-                onClick={() => {
-                  setVisibleDrawer(!visibleDrawer);
-                  setDataEdit(row);
-                }}
-                icon={
-                  <i className="fas fa-pen" style={{ marginRight: '5px' }} />
+            {permissions.isUpdate && (
+              <Tooltip
+                title={
+                  !isMobile && intl.formatMessage({ id: 'app.tooltip.edit' })
                 }
-                className="btn_edit"
-                type="ghost"
-                shape="circle"
-              >
-                <FormattedMessage id="app.tooltip.edit" />
-              </Button>
-            </Tooltip>
-            <Tooltip
-              title={
-                !isMobile && intl.formatMessage({ id: 'app.tooltip.remove' })
-              }
-            >
-              <Popconfirm
-                placement="bottom"
-                title={<FormattedMessage id="app.confirm.remove" />}
-                onConfirm={() => deleteRecord(row.id)}
               >
                 <Button
+                  onClick={() => {
+                    setVisibleDrawer(!visibleDrawer);
+                    setDataEdit(row);
+                  }}
                   icon={
-                    <i
-                      className="fas fa-trash"
-                      style={{ marginRight: '5px' }}
-                    />
+                    <i className="fas fa-pen" style={{ marginRight: '5px' }} />
                   }
                   className="btn_edit"
                   type="ghost"
                   shape="circle"
-                  style={{ marginLeft: '5px' }}
                 >
-                  <FormattedMessage id="app.tooltip.remove" />
+                  <FormattedMessage id="app.tooltip.edit" />
                 </Button>
-              </Popconfirm>
-            </Tooltip>
+              </Tooltip>
+            )}
+            {permissions.isDelete && (
+              <Tooltip
+                title={
+                  !isMobile && intl.formatMessage({ id: 'app.tooltip.remove' })
+                }
+              >
+                <Popconfirm
+                  placement="bottom"
+                  title={<FormattedMessage id="app.confirm.remove" />}
+                  onConfirm={() => deleteRecord(row.id)}
+                >
+                  <Button
+                    icon={
+                      <i
+                        className="fas fa-trash"
+                        style={{ marginRight: '5px' }}
+                      />
+                    }
+                    className="btn_edit"
+                    type="ghost"
+                    shape="circle"
+                    style={{ marginLeft: '5px' }}
+                  >
+                    <FormattedMessage id="app.tooltip.remove" />
+                  </Button>
+                </Popconfirm>
+              </Tooltip>
+            )}
           </div>
         </React.Fragment>
       ),
@@ -701,27 +736,29 @@ const User = ({ isMobile, intl }) => {
         title={<FormattedMessage id="app.user.list.header" />}
         action={
           <React.Fragment>
-            <Tooltip
-              title={
-                !isMobile &&
-                intl.formatMessage({ id: 'app.user.create.header' })
-              }
-            >
-              <Button
-                icon={
-                  <i className="fas fa-plus" style={{ marginRight: '5px' }} />
+            {permissions.isAdd && (
+              <Tooltip
+                title={
+                  !isMobile &&
+                  intl.formatMessage({ id: 'app.user.create.header' })
                 }
-                onClick={() => {
-                  setVisibleDrawer(!visibleDrawer);
-                  setDataEdit({});
-                }}
               >
-                {intl.formatMessage(
-                  { id: 'app.title.create' },
-                  { name: '(F2)' }
-                )}
-              </Button>
-            </Tooltip>
+                <Button
+                  icon={
+                    <i className="fas fa-plus" style={{ marginRight: '5px' }} />
+                  }
+                  onClick={() => {
+                    setVisibleDrawer(!visibleDrawer);
+                    setDataEdit({});
+                  }}
+                >
+                  {intl.formatMessage(
+                    { id: 'app.title.create' },
+                    { name: '(F2)' }
+                  )}
+                </Button>
+              </Tooltip>
+            )}
           </React.Fragment>
         }
       >

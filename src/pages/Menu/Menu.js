@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { menu, filter } from '../../features/menu/menuSlice';
 import filterIcon from '../../static/web/images/filter.svg';
 import MenuDrawer from '../../components/DrawerPage/MenuDrawer';
+import { useParams } from 'react-router-dom';
 
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
@@ -33,6 +34,8 @@ const FormItem = Form.Item;
 const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
 
 const Menu = ({ isMobile, intl }) => {
+  let { id } = useParams();
+  const userGroupId = localStorage.getItem('userGroupId');
   const dispatch = useDispatch();
   const list = useSelector(menu);
   const [loading, setLoading] = useState(false);
@@ -46,10 +49,35 @@ const Menu = ({ isMobile, intl }) => {
   const [total, setTotal] = useState(0);
   const [dataTree, setDataTree] = useState({});
   const [visibleFilter, setVisibleFilter] = useState(false);
+  const [permissions, setPermissions] = useState({});
+  console.log('permissions', permissions);
+
   useEffect(() => {
-    getList();
+    getPermission();
   }, []);
-  const getList = () => {
+  const getPermission = () => {
+    const params = {
+      filter: JSON.stringify({ userGroupId: userGroupId }),
+    };
+    dispatch({
+      type: 'userGroupRole/getOne',
+      payload: {
+        id: id,
+        params: params,
+      },
+      callback: (res) => {
+        if (res && res.success) {
+          const { list } = res.results;
+          getList(list);
+          setPermissions(list);
+        } else {
+          openNotification('error', res && res.message, '#fff1f0');
+          getList(list);
+        }
+      },
+    });
+  };
+  const getList = (permission) => {
     const { query } = list;
     const queryFilter = list.filter;
     setLoading(true);
@@ -98,9 +126,9 @@ const Menu = ({ isMobile, intl }) => {
                     <Row
                       key={item.id}
                       onDoubleClick={() => {
-                        // if (isUpdated) {
-                        changeVisibleDrawer(item);
-                        // }
+                        if (permission.isUpdate) {
+                          changeVisibleDrawer(item);
+                        }
                       }}
                       style={{
                         lineHeight: '30px',
@@ -110,37 +138,43 @@ const Menu = ({ isMobile, intl }) => {
                       className="row_custom"
                     >
                       <Col sm={10} className="row_10">
-                        <Tooltip title={item.status === 1 ? 'Kích hoạt' : 'Ẩn'}>
-                          <Popconfirm
-                            title={
-                              <>
-                                {item.status === 1 && (
-                                  <FormattedMessage id="app.menu.list.change1" />
-                                )}
-                                <div>
-                                  <FormattedMessage id="app.menu.list.change2" />
-                                </div>
-                              </>
-                            }
-                            placement="topLeft"
-                            onConfirm={() =>
-                              handleStatus(item.status !== 1 ? 1 : 0, item)
-                            }
-                            okText="Ok"
-                            cancelText="Hủy"
-                            icon={
-                              <QuestionCircleOutlined
-                                style={{ color: 'red' }}
-                              />
-                            }
+                        {permission.isBlock && (
+                          <Tooltip
+                            title={item.status === 1 ? 'Kích hoạt' : 'Ẩn'}
                           >
-                            <Checkbox
-                              // disabled={!isBlocked}
-                              checked={item.status === 1}
-                              size="small"
-                            />
-                          </Popconfirm>
-                        </Tooltip>
+                            <Popconfirm
+                              title={
+                                <>
+                                  {item.status === 1 && (
+                                    <FormattedMessage id="app.menu.list.change1" />
+                                  )}
+                                  <div>
+                                    <FormattedMessage id="app.menu.list.change2" />
+                                  </div>
+                                </>
+                              }
+                              placement="topLeft"
+                              onConfirm={() =>
+                                handleStatus(item.status !== 1 ? 1 : 0, item)
+                              }
+                              okText="Ok"
+                              cancelText={intl.formatMessage({
+                                id: 'app.common.deleteBtn.cancelText',
+                              })}
+                              icon={
+                                <QuestionCircleOutlined
+                                  style={{ color: 'red' }}
+                                />
+                              }
+                            >
+                              <Checkbox
+                                // disabled={!isBlocked}
+                                checked={item.status === 1}
+                                size="small"
+                              />
+                            </Popconfirm>
+                          </Tooltip>
+                        )}
                         &nbsp;&nbsp;
                         <span style={{ fontSize: '1rem' }}>
                           {item.menuName}
@@ -160,70 +194,72 @@ const Menu = ({ isMobile, intl }) => {
                         {item.status === -1 && <Tag color="red">Chờ xóa</Tag>}
                       </Col>
                       <Col sm={5} className="row_5">
-                        {/* {isDeleted && item.status !== -1 && ( */}
-                        <Tooltip
-                          title={
-                            !isMobile && (
-                              <FormattedMessage id="app.tooltip.remove" />
-                            )
-                          }
-                        >
-                          <Popconfirm
+                        {permission.isDelete && (
+                          <Tooltip
                             title={
-                              <FormattedMessage id="app.menu.list.change1" />
+                              !isMobile && (
+                                <FormattedMessage id="app.tooltip.remove" />
+                              )
                             }
-                            placement="topLeft"
-                            onConfirm={() => handleStatus(-1, item)}
-                            okText="Ok"
-                            cancelText="Hủy"
-                            icon={
-                              <QuestionCircleOutlined
-                                style={{ color: 'red' }}
-                              />
+                          >
+                            <Popconfirm
+                              title={
+                                <FormattedMessage id="app.menu.list.change1" />
+                              }
+                              placement="topLeft"
+                              onConfirm={() => handleStatus(-1, item)}
+                              okText="Ok"
+                              cancelText={intl.formatMessage({
+                                id: 'app.common.deleteBtn.cancelText',
+                              })}
+                              icon={
+                                <QuestionCircleOutlined
+                                  style={{ color: 'red' }}
+                                />
+                              }
+                            >
+                              <Button
+                                style={{ float: 'right' }}
+                                icon={
+                                  <i
+                                    className="fas fa-trash"
+                                    style={{ marginRight: '5px' }}
+                                  />
+                                }
+                                className="btn_edit"
+                                type="ghost"
+                                shape="circle"
+                              >
+                                <FormattedMessage id="app.tooltip.remove" />
+                              </Button>
+                            </Popconfirm>
+                          </Tooltip>
+                        )}
+                        {permission.isUpdate && (
+                          <Tooltip
+                            title={
+                              !isMobile && (
+                                <FormattedMessage id="app.tooltip.edit" />
+                              )
                             }
                           >
                             <Button
-                              style={{ float: 'right' }}
+                              onClick={() => changeVisibleDrawer(item)}
                               icon={
                                 <i
-                                  className="fas fa-trash"
+                                  className="fas fa-pen"
                                   style={{ marginRight: '5px' }}
                                 />
                               }
                               className="btn_edit"
+                              style={{ marginRight: 10, float: 'right' }}
                               type="ghost"
                               shape="circle"
                             >
-                              <FormattedMessage id="app.tooltip.remove" />
-                            </Button>
-                          </Popconfirm>
-                        </Tooltip>
-                        {/* )}
-                      {isUpdated && ( */}
-                        <Tooltip
-                          title={
-                            !isMobile && (
                               <FormattedMessage id="app.tooltip.edit" />
-                            )
-                          }
-                        >
-                          <Button
-                            onClick={() => changeVisibleDrawer(item)}
-                            icon={
-                              <i
-                                className="fas fa-pen"
-                                style={{ marginRight: '5px' }}
-                              />
-                            }
-                            className="btn_edit"
-                            style={{ marginRight: 10, float: 'right' }}
-                            type="ghost"
-                            shape="circle"
-                          >
-                            <FormattedMessage id="app.tooltip.edit" />
-                          </Button>
-                        </Tooltip>
-                        {/* )} */}
+                            </Button>
+                          </Tooltip>
+                        )}
                       </Col>
                     </Row>
                   ),
@@ -325,9 +361,9 @@ const Menu = ({ isMobile, intl }) => {
                     <Row
                       key={item.id}
                       onDoubleClick={() => {
-                        // if (isUpdated) {
-                        changeVisibleDrawer(item);
-                        // }
+                        if (permissions.isUpdate) {
+                          changeVisibleDrawer(item);
+                        }
                       }}
                       style={{
                         lineHeight: '30px',
@@ -337,37 +373,43 @@ const Menu = ({ isMobile, intl }) => {
                       className="row_custom"
                     >
                       <Col sm={10} className="row_10">
-                        <Tooltip title={item.status === 1 ? 'Kích hoạt' : 'Ẩn'}>
-                          <Popconfirm
-                            title={
-                              <>
-                                {item.status === 1 && (
-                                  <FormattedMessage id="app.menu.list.change1" />
-                                )}
-                                <div>
-                                  <FormattedMessage id="app.menu.list.change2" />
-                                </div>
-                              </>
-                            }
-                            placement="topLeft"
-                            onConfirm={() =>
-                              handleStatus(item.status !== 1 ? 1 : 0, item)
-                            }
-                            okText="Ok"
-                            cancelText="Hủy"
-                            icon={
-                              <QuestionCircleOutlined
-                                style={{ color: 'red' }}
-                              />
-                            }
+                        {permissions.isBlock && (
+                          <Tooltip
+                            title={item.status === 1 ? 'Kích hoạt' : 'Ẩn'}
                           >
-                            <Checkbox
-                              // disabled={!isBlocked}
-                              checked={item.status === 1}
-                              size="small"
-                            />
-                          </Popconfirm>
-                        </Tooltip>
+                            <Popconfirm
+                              title={
+                                <>
+                                  {item.status === 1 && (
+                                    <FormattedMessage id="app.menu.list.change1" />
+                                  )}
+                                  <div>
+                                    <FormattedMessage id="app.menu.list.change2" />
+                                  </div>
+                                </>
+                              }
+                              placement="topLeft"
+                              onConfirm={() =>
+                                handleStatus(item.status !== 1 ? 1 : 0, item)
+                              }
+                              okText="Ok"
+                              cancelText={intl.formatMessage({
+                                id: 'app.common.deleteBtn.cancelText',
+                              })}
+                              icon={
+                                <QuestionCircleOutlined
+                                  style={{ color: 'red' }}
+                                />
+                              }
+                            >
+                              <Checkbox
+                                // disabled={!isBlocked}
+                                checked={item.status === 1}
+                                size="small"
+                              />
+                            </Popconfirm>
+                          </Tooltip>
+                        )}
                         &nbsp;&nbsp;
                         <span style={{ fontSize: '1rem' }}>
                           {item.menuName}
@@ -387,70 +429,72 @@ const Menu = ({ isMobile, intl }) => {
                         {item.status === -1 && <Tag color="red">Chờ xóa</Tag>}
                       </Col>
                       <Col sm={5} className="row_5">
-                        {/* {isDeleted && item.status !== -1 && ( */}
-                        <Tooltip
-                          title={
-                            !isMobile && (
-                              <FormattedMessage id="app.tooltip.remove" />
-                            )
-                          }
-                        >
-                          <Popconfirm
+                        {permissions.isDelete && (
+                          <Tooltip
                             title={
-                              <FormattedMessage id="app.menu.list.change1" />
+                              !isMobile && (
+                                <FormattedMessage id="app.tooltip.remove" />
+                              )
                             }
-                            placement="topLeft"
-                            onConfirm={() => handleStatus(-1, item)}
-                            okText="Ok"
-                            cancelText="Hủy"
-                            icon={
-                              <QuestionCircleOutlined
-                                style={{ color: 'red' }}
-                              />
+                          >
+                            <Popconfirm
+                              title={
+                                <FormattedMessage id="app.menu.list.change1" />
+                              }
+                              placement="topLeft"
+                              onConfirm={() => handleStatus(-1, item)}
+                              okText="Ok"
+                              cancelText={intl.formatMessage({
+                                id: 'app.common.deleteBtn.cancelText',
+                              })}
+                              icon={
+                                <QuestionCircleOutlined
+                                  style={{ color: 'red' }}
+                                />
+                              }
+                            >
+                              <Button
+                                style={{ float: 'right' }}
+                                icon={
+                                  <i
+                                    className="fas fa-trash"
+                                    style={{ marginRight: '5px' }}
+                                  />
+                                }
+                                className="btn_edit"
+                                type="ghost"
+                                shape="circle"
+                              >
+                                <FormattedMessage id="app.tooltip.remove" />
+                              </Button>
+                            </Popconfirm>
+                          </Tooltip>
+                        )}
+                        {permissions.isUpdate && (
+                          <Tooltip
+                            title={
+                              !isMobile && (
+                                <FormattedMessage id="app.tooltip.edit" />
+                              )
                             }
                           >
                             <Button
-                              style={{ float: 'right' }}
+                              onClick={() => changeVisibleDrawer(item)}
                               icon={
                                 <i
-                                  className="fas fa-trash"
+                                  className="fas fa-pen"
                                   style={{ marginRight: '5px' }}
                                 />
                               }
                               className="btn_edit"
+                              style={{ marginRight: 10, float: 'right' }}
                               type="ghost"
                               shape="circle"
                             >
-                              <FormattedMessage id="app.tooltip.remove" />
-                            </Button>
-                          </Popconfirm>
-                        </Tooltip>
-                        {/* )}
-                      {isUpdated && ( */}
-                        <Tooltip
-                          title={
-                            !isMobile && (
                               <FormattedMessage id="app.tooltip.edit" />
-                            )
-                          }
-                        >
-                          <Button
-                            onClick={() => changeVisibleDrawer(item)}
-                            icon={
-                              <i
-                                className="fas fa-pen"
-                                style={{ marginRight: '5px' }}
-                              />
-                            }
-                            className="btn_edit"
-                            style={{ marginRight: 10, float: 'right' }}
-                            type="ghost"
-                            shape="circle"
-                          >
-                            <FormattedMessage id="app.tooltip.edit" />
-                          </Button>
-                        </Tooltip>
-                        {/* )} */}
+                            </Button>
+                          </Tooltip>
+                        )}
                       </Col>
                     </Row>
                   ),
@@ -509,9 +553,9 @@ const Menu = ({ isMobile, intl }) => {
                     <Row
                       key={item.id}
                       onDoubleClick={() => {
-                        // if (isUpdated) {
-                        changeVisibleDrawer(item);
-                        // }
+                        if (permissions.isUpdate) {
+                          changeVisibleDrawer(item);
+                        }
                       }}
                       style={{
                         lineHeight: '30px',
@@ -521,45 +565,49 @@ const Menu = ({ isMobile, intl }) => {
                       className="row_custom"
                     >
                       <Col sm={10} className="row_10">
-                        <Tooltip
-                          title={
-                            item.status === 1
-                              ? 'Kích hoạt'
-                              : item.status === 0
-                              ? 'Ẩn'
-                              : 'Chờ xóa'
-                          }
-                        >
-                          <Popconfirm
+                        {permissions.isBlock && (
+                          <Tooltip
                             title={
-                              <>
-                                {item.status === 1 && (
-                                  <FormattedMessage id="app.menu.list.change1" />
-                                )}
-                                <div>
-                                  <FormattedMessage id="app.menu.list.change2" />
-                                </div>
-                              </>
-                            }
-                            placement="topLeft"
-                            onConfirm={() =>
-                              handleStatus(item.status !== 1 ? 1 : 0, item)
-                            }
-                            okText="Ok"
-                            cancelText="Hủy"
-                            icon={
-                              <QuestionCircleOutlined
-                                style={{ color: 'red' }}
-                              />
+                              item.status === 1
+                                ? 'Kích hoạt'
+                                : item.status === 0
+                                ? 'Ẩn'
+                                : 'Chờ xóa'
                             }
                           >
-                            <Checkbox
-                              // disabled={!isBlocked}
-                              checked={item.status === 1}
-                              size="small"
-                            />
-                          </Popconfirm>
-                        </Tooltip>
+                            <Popconfirm
+                              title={
+                                <>
+                                  {item.status === 1 && (
+                                    <FormattedMessage id="app.menu.list.change1" />
+                                  )}
+                                  <div>
+                                    <FormattedMessage id="app.menu.list.change2" />
+                                  </div>
+                                </>
+                              }
+                              placement="topLeft"
+                              onConfirm={() =>
+                                handleStatus(item.status !== 1 ? 1 : 0, item)
+                              }
+                              okText="Ok"
+                              cancelText={intl.formatMessage({
+                                id: 'app.common.deleteBtn.cancelText',
+                              })}
+                              icon={
+                                <QuestionCircleOutlined
+                                  style={{ color: 'red' }}
+                                />
+                              }
+                            >
+                              <Checkbox
+                                // disabled={!isBlocked}
+                                checked={item.status === 1}
+                                size="small"
+                              />
+                            </Popconfirm>
+                          </Tooltip>
+                        )}
                         &nbsp;&nbsp;
                         <span style={{ fontSize: '1rem' }}>
                           {item.menuName}
@@ -579,70 +627,72 @@ const Menu = ({ isMobile, intl }) => {
                         {item.status === -1 && <Tag color="red">Chờ xóa</Tag>}
                       </Col>
                       <Col sm={5} className="row_5">
-                        {/* {isDeleted && item.status !== -1 && ( */}
-                        <Tooltip
-                          title={
-                            !isMobile && (
-                              <FormattedMessage id="app.tooltip.remove" />
-                            )
-                          }
-                        >
-                          <Popconfirm
+                        {permissions.isDelete && (
+                          <Tooltip
                             title={
-                              <FormattedMessage id="app.menu.list.change1" />
+                              !isMobile && (
+                                <FormattedMessage id="app.tooltip.remove" />
+                              )
                             }
-                            placement="topLeft"
-                            onConfirm={() => handleStatus(-1, item)}
-                            okText="Ok"
-                            cancelText="Hủy"
-                            icon={
-                              <QuestionCircleOutlined
-                                style={{ color: 'red' }}
-                              />
+                          >
+                            <Popconfirm
+                              title={
+                                <FormattedMessage id="app.menu.list.change1" />
+                              }
+                              placement="topLeft"
+                              onConfirm={() => handleStatus(-1, item)}
+                              okText="Ok"
+                              cancelText={intl.formatMessage({
+                                id: 'app.common.deleteBtn.cancelText',
+                              })}
+                              icon={
+                                <QuestionCircleOutlined
+                                  style={{ color: 'red' }}
+                                />
+                              }
+                            >
+                              <Button
+                                style={{ float: 'right' }}
+                                icon={
+                                  <i
+                                    className="fas fa-trash"
+                                    style={{ marginRight: '5px' }}
+                                  />
+                                }
+                                className="btn_edit"
+                                type="ghost"
+                                shape="circle"
+                              >
+                                <FormattedMessage id="app.tooltip.remove" />
+                              </Button>
+                            </Popconfirm>
+                          </Tooltip>
+                        )}
+                        {permissions.isUpdate && (
+                          <Tooltip
+                            title={
+                              !isMobile && (
+                                <FormattedMessage id="app.tooltip.edit" />
+                              )
                             }
                           >
                             <Button
-                              style={{ float: 'right' }}
+                              onClick={() => changeVisibleDrawer(item)}
                               icon={
                                 <i
-                                  className="fas fa-trash"
+                                  className="fas fa-pen"
                                   style={{ marginRight: '5px' }}
                                 />
                               }
                               className="btn_edit"
+                              style={{ marginRight: 10, float: 'right' }}
                               type="ghost"
                               shape="circle"
                             >
-                              <FormattedMessage id="app.tooltip.remove" />
-                            </Button>
-                          </Popconfirm>
-                        </Tooltip>
-                        {/* )}
-                      {isUpdated && ( */}
-                        <Tooltip
-                          title={
-                            !isMobile && (
                               <FormattedMessage id="app.tooltip.edit" />
-                            )
-                          }
-                        >
-                          <Button
-                            onClick={() => changeVisibleDrawer(item)}
-                            icon={
-                              <i
-                                className="fas fa-pen"
-                                style={{ marginRight: '5px' }}
-                              />
-                            }
-                            className="btn_edit"
-                            style={{ marginRight: 10, float: 'right' }}
-                            type="ghost"
-                            shape="circle"
-                          >
-                            <FormattedMessage id="app.tooltip.edit" />
-                          </Button>
-                        </Tooltip>
-                        {/* )} */}
+                            </Button>
+                          </Tooltip>
+                        )}
                       </Col>
                     </Row>
                   ),
@@ -1016,27 +1066,29 @@ const Menu = ({ isMobile, intl }) => {
         title={<FormattedMessage id="app.menu.list.header" />}
         action={
           <React.Fragment>
-            <Tooltip
-              title={
-                !isMobile &&
-                intl.formatMessage({ id: 'app.menu.create.header' })
-              }
-            >
-              <Button
-                icon={
-                  <i className="fas fa-plus" style={{ marginRight: '5px' }} />
+            {permissions.isAdd && (
+              <Tooltip
+                title={
+                  !isMobile &&
+                  intl.formatMessage({ id: 'app.menu.create.header' })
                 }
-                onClick={() => {
-                  setVisibleDrawer(!visibleDrawer);
-                  setDataEdit({});
-                }}
               >
-                {intl.formatMessage(
-                  { id: 'app.title.create' },
-                  { name: '(F2)' }
-                )}
-              </Button>
-            </Tooltip>
+                <Button
+                  icon={
+                    <i className="fas fa-plus" style={{ marginRight: '5px' }} />
+                  }
+                  onClick={() => {
+                    setVisibleDrawer(!visibleDrawer);
+                    setDataEdit({});
+                  }}
+                >
+                  {intl.formatMessage(
+                    { id: 'app.title.create' },
+                    { name: '(F2)' }
+                  )}
+                </Button>
+              </Tooltip>
+            )}
           </React.Fragment>
         }
       >

@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HeaderContent from '../../layouts/HeaderContent';
 import { useParams } from 'react-router-dom';
-import {
-  Button,
-  Row,
-  Col,
-  Form,
-  Tooltip,
-  notification,
-  Spin,
-  Menu,
-  Input,
-} from 'antd';
+import { Button, Tooltip, notification } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,15 +13,15 @@ import CheckBox from '../../components/CheckBox';
 import _ from 'lodash';
 import Table from '../../components/Table';
 
-const FormItem = Form.Item;
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 50;
 
 const UserGroupRole = ({ isMobile, intl }) => {
   const dispatch = useDispatch();
+  let { id } = useParams();
   let history = useHistory();
   const dataAll = useSelector(userGroupRole);
   const { data } = dataAll;
-  let { id } = useParams();
+
   const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState([]);
   const [getRoleTemplate, setGetRoleTemplate] = useState(false);

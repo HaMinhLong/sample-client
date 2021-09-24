@@ -7,12 +7,20 @@ const getListRole = (id, params) =>
       params
     )}`
   );
-const getOneRole = (id) =>
-  axios.get(`${process.env.REACT_APP_SERVER}/userGroupRole/${id}`);
+const getListAuthRole = (params) =>
+  axios({
+    method: 'get',
+    url: `${process.env.REACT_APP_SERVER}/userGroupRole/auth_routes`,
+    headers: { 'x-access-token': params },
+  });
+const getOneRole = (id, params) =>
+  axios.get(
+    `${process.env.REACT_APP_SERVER}/userGroupRole/${id}?${stringify(params)}`
+  );
 const bulkUpdateRole = (id, params) =>
   axios.post(
     `${process.env.REACT_APP_SERVER}/userGroupRole/bulk/update/${id}`,
     params
   );
 
-export { getListRole, getOneRole, bulkUpdateRole };
+export { getListRole, getListAuthRole, getOneRole, bulkUpdateRole };

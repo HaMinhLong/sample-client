@@ -17,6 +17,7 @@ import {
 import HeaderContent from '../../layouts/HeaderContent';
 import Table from '../../components/Table';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { userGroup, filter } from '../../features/userGroup/userGroupSlice';
 import '../../utils/css/styleList.scss';
@@ -32,6 +33,8 @@ const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
 const UserGroup = ({ isMobile, intl }) => {
+  let { id } = useParams();
+  const userGroupId = localStorage.getItem('userGroupId');
   const dispatch = useDispatch();
   const list = useSelector(userGroup);
   const [loading, setLoading] = useState(false);
@@ -39,13 +42,35 @@ const UserGroup = ({ isMobile, intl }) => {
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
   const [redirect, setRedirect] = useState('');
+  const [permissions, setPermissions] = useState({});
   useEffect(() => {
     getList();
+    getPermission();
   }, []);
 
   if (redirect) {
     return <Redirect to={redirect} />;
   }
+  const getPermission = () => {
+    const params = {
+      filter: JSON.stringify({ userGroupId: userGroupId }),
+    };
+    dispatch({
+      type: 'userGroupRole/getOne',
+      payload: {
+        id: id,
+        params: params,
+      },
+      callback: (res) => {
+        if (res && res.success) {
+          const { list } = res.results;
+          setPermissions(list);
+        } else {
+          openNotification('error', res && res.message, '#fff1f0');
+        }
+      },
+    });
+  };
   const getList = () => {
     const { query } = list;
     const queryFilter = list.filter;
@@ -401,23 +426,29 @@ const UserGroup = ({ isMobile, intl }) => {
                   <div>{item.name}</div>
                 </Menu.Item>
               );
+
             if (item.status === 0)
               return (
-                <Menu.Item
-                  key={item.status}
-                  onClick={() => handleStatus(item.status, row)}
-                >
-                  <div>{item.name}</div>
-                </Menu.Item>
+                permissions.isBlock && (
+                  <Menu.Item
+                    key={item.status}
+                    onClick={() => handleStatus(item.status, row)}
+                  >
+                    <div>{item.name}</div>
+                  </Menu.Item>
+                )
               );
+
             if (item.status === -1)
               return (
-                <Menu.Item
-                  key={item.status}
-                  onClick={() => handleStatus(item.status, row)}
-                >
-                  <div>{item.name}</div>
-                </Menu.Item>
+                permissions.isDelete && (
+                  <Menu.Item
+                    key={item.status}
+                    onClick={() => handleStatus(item.status, row)}
+                  >
+                    <div>{item.name}</div>
+                  </Menu.Item>
+                )
               );
 
             return (
@@ -528,40 +559,68 @@ const UserGroup = ({ isMobile, intl }) => {
       render: (cell, row) => (
         <React.Fragment>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Tooltip
-              title={
-                !isMobile && intl.formatMessage({ id: 'app.tooltip.edit' })
-              }
-            >
-              <Button
-                onClick={() => {
-                  setVisibleDrawer(!visibleDrawer);
-                  setDataEdit(row);
-                }}
-                icon={
-                  <i className="fas fa-pen" style={{ marginRight: '5px' }} />
+            {permissions.isUpdate && (
+              <Tooltip
+                title={
+                  !isMobile && intl.formatMessage({ id: 'app.tooltip.edit' })
                 }
-                className="btn_edit"
-                type="ghost"
-                shape="circle"
-              >
-                <FormattedMessage id="app.tooltip.edit" />
-              </Button>
-            </Tooltip>
-            <Tooltip
-              title={
-                !isMobile && intl.formatMessage({ id: 'app.tooltip.remove' })
-              }
-            >
-              <Popconfirm
-                placement="bottom"
-                title={<FormattedMessage id="app.confirm.remove" />}
-                onConfirm={() => deleteRecord(row.id)}
               >
                 <Button
+                  onClick={() => {
+                    setVisibleDrawer(!visibleDrawer);
+                    setDataEdit(row);
+                  }}
+                  icon={
+                    <i className="fas fa-pen" style={{ marginRight: '5px' }} />
+                  }
+                  className="btn_edit"
+                  type="ghost"
+                  shape="circle"
+                >
+                  <FormattedMessage id="app.tooltip.edit" />
+                </Button>
+              </Tooltip>
+            )}
+            {permissions.isDelete && (
+              <Tooltip
+                title={
+                  !isMobile && intl.formatMessage({ id: 'app.tooltip.remove' })
+                }
+              >
+                <Popconfirm
+                  placement="bottom"
+                  title={<FormattedMessage id="app.confirm.remove" />}
+                  onConfirm={() => deleteRecord(row.id)}
+                >
+                  <Button
+                    icon={
+                      <i
+                        className="fas fa-trash"
+                        style={{ marginRight: '5px' }}
+                      />
+                    }
+                    className="btn_edit"
+                    type="ghost"
+                    shape="circle"
+                    style={{ marginLeft: '5px' }}
+                  >
+                    <FormattedMessage id="app.tooltip.remove" />
+                  </Button>
+                </Popconfirm>
+              </Tooltip>
+            )}
+            {permissions.isApprove && (
+              <Tooltip
+                title={
+                  !isMobile &&
+                  intl.formatMessage({ id: 'app.user.permissions' })
+                }
+              >
+                <Button
+                  onClick={() => setRedirect(`/grant-permissions/${row.id}`)}
                   icon={
                     <i
-                      className="fas fa-trash"
+                      className="fas fa-clipboard-list"
                       style={{ marginRight: '5px' }}
                     />
                   }
@@ -570,31 +629,10 @@ const UserGroup = ({ isMobile, intl }) => {
                   shape="circle"
                   style={{ marginLeft: '5px' }}
                 >
-                  <FormattedMessage id="app.tooltip.remove" />
+                  {intl.formatMessage({ id: 'app.user.permissions' })}
                 </Button>
-              </Popconfirm>
-            </Tooltip>
-            <Tooltip
-              title={
-                !isMobile && intl.formatMessage({ id: 'app.user.permissions' })
-              }
-            >
-              <Button
-                onClick={() => setRedirect(`/grant-permissions/${row.id}`)}
-                icon={
-                  <i
-                    className="fas fa-clipboard-list"
-                    style={{ marginRight: '5px' }}
-                  />
-                }
-                className="btn_edit"
-                type="ghost"
-                shape="circle"
-                style={{ marginLeft: '5px' }}
-              >
-                {intl.formatMessage({ id: 'app.user.permissions' })}
-              </Button>
-            </Tooltip>
+              </Tooltip>
+            )}
           </div>
         </React.Fragment>
       ),
@@ -606,27 +644,29 @@ const UserGroup = ({ isMobile, intl }) => {
         title={<FormattedMessage id="app.userGroup.list.header" />}
         action={
           <React.Fragment>
-            <Tooltip
-              title={
-                !isMobile &&
-                intl.formatMessage({ id: 'app.userGroup.create.header' })
-              }
-            >
-              <Button
-                icon={
-                  <i className="fas fa-plus" style={{ marginRight: '5px' }} />
+            {permissions.isAdd && (
+              <Tooltip
+                title={
+                  !isMobile &&
+                  intl.formatMessage({ id: 'app.userGroup.create.header' })
                 }
-                onClick={() => {
-                  setVisibleDrawer(!visibleDrawer);
-                  setDataEdit({});
-                }}
               >
-                {intl.formatMessage(
-                  { id: 'app.title.create' },
-                  { name: '(F2)' }
-                )}
-              </Button>
-            </Tooltip>
+                <Button
+                  icon={
+                    <i className="fas fa-plus" style={{ marginRight: '5px' }} />
+                  }
+                  onClick={() => {
+                    setVisibleDrawer(!visibleDrawer);
+                    setDataEdit({});
+                  }}
+                >
+                  {intl.formatMessage(
+                    { id: 'app.title.create' },
+                    { name: '(F2)' }
+                  )}
+                </Button>
+              </Tooltip>
+            )}
           </React.Fragment>
         }
       >

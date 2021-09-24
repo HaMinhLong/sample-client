@@ -3,6 +3,7 @@ const UserGroup = require('./en-US/UserGroup');
 const User = require('./en-US/User');
 const Menu = require('./en-US/Menu');
 const UserGroupRole = require('./en-US/UserGroupRole');
+const Login = require('./en-US/Login');
 
 module.exports = {
   'app.common.validate.max300':
@@ -40,9 +41,11 @@ module.exports = {
   'app.common.searchBtn': 'Search',
   'app.common.delete.success': 'Delete record successfully!',
   'app.common.edit.success': 'Successfully updated!',
+  'app.common.login.success': 'Successfully login!',
   'app.common.export.success': 'Export statistics {name} successfully!',
   'app.common.create.success': 'Add {name} successfully!',
   'app.common.permissions.success': 'Grant permissions successfully!',
+  'app.common.switch.lang': 'Switch language',
   'app.common.error.server.msg': 'An error occurred!',
   'app.common.crud.error.update.change': 'Please change at least 1 field',
   'app.common.crud.validate.input': 'Please enter information',
@@ -79,4 +82,5 @@ module.exports = {
   ...User,
   ...Menu,
   ...UserGroupRole,
+  ...Login,
 };

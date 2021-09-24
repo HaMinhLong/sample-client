@@ -3,6 +3,7 @@ const UserGroup = require('./vi-VN/UserGroup');
 const User = require('./vi-VN/User');
 const Menu = require('./vi-VN/Menu');
 const UserGroupRole = require('./vi-VN/UserGroupRole');
+const Login = require('./vi-VN/Login');
 
 module.exports = {
   'app.common.validate.max300':
@@ -39,9 +40,11 @@ module.exports = {
   'app.common.crudBtns.3': 'Xuất báo cáo',
   'app.common.searchBtn': 'Tìm kiếm',
   'app.common.delete.success': 'Xóa bản ghi thành công!',
+  'app.common.login.success': 'Đăng nhập thành công!',
   'app.common.edit.success': 'Cập nhật thông tin thành công!',
   'app.common.export.success': 'Xuất thống kê {name} thành công!',
   'app.common.create.success': 'Thêm mới {name} thành công!',
+  'app.common.switch.lang': 'Chuyển đổi ngôn ngữ',
   'app.common.permissions.success': 'Cấp quyền thành công!',
   'app.common.error.server.msg': 'Có lỗi xảy ra!',
   'app.common.crud.error.update.change':
@@ -80,4 +83,5 @@ module.exports = {
   ...User,
   ...Menu,
   ...UserGroupRole,
+  ...Login,
 };

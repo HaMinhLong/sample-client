@@ -1,9 +1,10 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
-import { save, info, query } from './userGroupRoleSlice';
+import { save, info, query, saveAll } from './userGroupRoleSlice';
 import {
   getListRole,
   getOneRole,
   bulkUpdateRole,
+  getListAuthRole,
 } from '../../api/userGroupRole';
 
 function* getList({ payload: { id, params }, callback }) {
@@ -15,8 +16,16 @@ function* getList({ payload: { id, params }, callback }) {
   }
   if (callback) callback(data);
 }
-function* getOne({ payload: { id }, callback }) {
-  const { data } = yield call(getOneRole, id);
+
+function* getListAuth({ payload, callback }) {
+  const { data } = yield call(getListAuthRole, payload);
+  if (data && data.success) {
+    yield put(saveAll(data || {}));
+  }
+  if (callback) callback(data);
+}
+function* getOne({ payload: { id, params }, callback }) {
+  const { data } = yield call(getOneRole, id, params);
   if (data) {
     yield put(info(data.results.list || {}));
   }
@@ -29,6 +38,7 @@ function* bulkUpdate({ payload: { id, params }, callback }) {
 
 export function* userGroupRoleSaga() {
   yield takeLatest('userGroupRole/fetch', getList);
+  yield takeLatest('userGroupRole/authRole', getListAuth);
   yield takeLatest('userGroupRole/getOne', getOne);
   yield takeLatest('userGroupRole/bulkUpdate', bulkUpdate);
 }
