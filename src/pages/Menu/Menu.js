@@ -1198,6 +1198,7 @@ const Menu = ({ isMobile, intl }) => {
         dataEdit={dataEdit}
         dataTree={dataTree}
         resetVisible={() => setVisibleDrawer(false)}
+        permissions={permissions}
         getList={getList}
       />
     </>

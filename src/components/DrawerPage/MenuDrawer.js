@@ -26,6 +26,7 @@ const MenuDrawer = ({
   getList,
   dataTree,
   resetVisible,
+  permissions,
 }) => {
   const dispatch = useDispatch();
   const list = useSelector(menu);
@@ -83,7 +84,6 @@ const MenuDrawer = ({
           menuNameOld: data.menuName,
           parentId: values.parentId || null,
         };
-        console.log('addItem', addItem);
         if (data.id) {
           dispatch({
             type: 'menu/update',
@@ -101,8 +101,8 @@ const MenuDrawer = ({
                   intl.formatMessage({ id: 'app.common.edit.success' }),
                   '#f6ffed'
                 );
-                getList();
                 changeDrawer('close');
+                getList(permissions);
               } else if (res && res.success === false) {
                 openNotification('error', res && res.message, '#fff1f0');
               }
@@ -123,8 +123,8 @@ const MenuDrawer = ({
                   ),
                   '#f6ffed'
                 );
-                getList();
                 changeDrawer('close');
+                getList(permissions);
               } else if (res && res.success === false) {
                 openNotification('error', res && res.message, '#fff1f0');
               }

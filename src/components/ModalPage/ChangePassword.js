@@ -48,7 +48,7 @@ const ChangePassword = ({ intl, visible }) => {
         payload: values,
         callback: (res) => {
           setLoading(false);
-          if (res && res.success) {
+          if (res && res.success === true) {
             openNotification(
               'success',
               intl.formatMessage({
