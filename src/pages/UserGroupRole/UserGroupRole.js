@@ -17,6 +17,7 @@ const PAGE_SIZE = 50;
 
 const UserGroupRole = ({ isMobile, intl }) => {
   const dispatch = useDispatch();
+
   let { id } = useParams();
   let history = useHistory();
   const dataAll = useSelector(userGroupRole);
@@ -106,6 +107,7 @@ const UserGroupRole = ({ isMobile, intl }) => {
             intl.formatMessage({ id: 'app.common.permissions.success' }),
             '#f6ffed'
           );
+          window.location = `/grant-permissions/${id}`;
           getList();
         } else {
           openNotification('error', res && res.message, '#fff1f0');
