@@ -7,6 +7,8 @@ import {
   updateUser,
   updateStatusUser,
   deleteUser,
+  forgotPasswordUser,
+  changePasswordUserNotLogin,
 } from '../../api/user';
 
 function* getList({ payload, callback }) {
@@ -45,7 +47,14 @@ function* deleteRecord({ payload: { id }, callback }) {
   const { data } = yield call(deleteUser, id);
   if (callback) callback(data);
 }
-
+function* changePasswordNotLogin({ payload, callback }) {
+  const { data } = yield call(changePasswordUserNotLogin, payload);
+  if (callback) callback(data);
+}
+function* forgotPassword({ payload, callback }) {
+  const { data } = yield call(forgotPasswordUser, payload);
+  if (callback) callback(data);
+}
 export function* userSaga() {
   yield takeLatest('user/fetch', getList);
   yield takeLatest('user/getOne', getOne);
@@ -54,4 +63,6 @@ export function* userSaga() {
   yield takeLatest('user/update', updateRecord);
   yield takeLatest('user/updateStatus', updateStatus);
   yield takeLatest('user/delete', deleteRecord);
+  yield takeLatest('user/changePasswordNotLogin', changePasswordNotLogin);
+  yield takeLatest('user/forgotPassword', forgotPassword);
 }

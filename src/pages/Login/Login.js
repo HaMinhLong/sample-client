@@ -10,10 +10,15 @@ import {
   Typography,
 } from 'antd';
 import './login.scss';
-const { Title, Text } = Typography;
+import ForgetPassword from '../../components/ModalPage/ForgetPassword';
+import ChangePassword from '../../components/ModalPage/ChangePassword';
+const { Title, Text, Link } = Typography;
+
 const Login = ({ isMobile, intl }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [visibleForget, setVisibleForget] = useState(false);
+  const [visibleChangePassword, setVisibleChangePassword] = useState(false);
   const onFinish = (values) => {
     setLoading(true);
     dispatch({
@@ -62,109 +67,129 @@ const Login = ({ isMobile, intl }) => {
     style: { marginBottom: 20 },
   };
   return (
-    <section className="login__page">
-      <Spin spinning={loading}>
-        <div className="form__container">
-          <Title level={2}>
-            {intl.formatMessage({ id: 'app.login.list.title.header' })}
-          </Title>
-          <Text style={{ marginBottom: 50 }}>
-            {intl.formatMessage({ id: 'app.login.list.title.col0' })}
-          </Text>
-          <Form
-            hideRequiredMark
-            name="basic"
-            initialValues={{ username: '', password: '', remember: true }}
-            onFinish={onFinish}
-            layout="vertical"
-            className="form__login"
-          >
-            <Form.Item
-              {...formItemLayout}
-              label={
-                <span>
-                  <span style={{ color: 'red' }}>*</span>&nbsp;
-                  {intl.formatMessage({ id: 'app.login.list.title.col1' })}
-                </span>
-              }
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: intl.formatMessage({
-                    id: 'app.common.crud.validate.input',
-                  }),
-                },
-              ]}
+    <>
+      <section className="login__page">
+        <Spin spinning={loading}>
+          <div className="form__container">
+            <Title level={2}>
+              {intl.formatMessage({ id: 'app.login.list.title.header' })}
+            </Title>
+            <Text style={{ marginBottom: 50 }}>
+              {intl.formatMessage({ id: 'app.login.list.title.col0' })}
+            </Text>
+            <Form
+              hideRequiredMark
+              name="basic"
+              initialValues={{ username: '', password: '', remember: true }}
+              onFinish={onFinish}
+              layout="vertical"
+              className="form__login"
             >
-              <Input
-                placeholder={intl.formatMessage({
-                  id: 'app.login.list.title.username',
-                })}
-              />
-            </Form.Item>
-
-            <Form.Item
-              {...formItemLayout}
-              label={
-                <span>
-                  <span style={{ color: 'red' }}>*</span>&nbsp;
-                  {intl.formatMessage({ id: 'app.login.list.title.col2' })}
-                </span>
-              }
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: intl.formatMessage({
-                    id: 'app.common.crud.validate.input',
-                  }),
-                },
-              ]}
-            >
-              <Input.Password
-                placeholder={intl.formatMessage({
-                  id: 'app.login.list.title.password',
-                })}
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="remember"
-              valuePropName="checked"
-              wrapperCol={{ span: 24 }}
-            >
-              <Checkbox>
-                {' '}
-                {intl.formatMessage({ id: 'app.login.list.title.col3' })}
-              </Checkbox>
-            </Form.Item>
-
-            <Form.Item
-              wrapperCol={{ span: 24 }}
-              style={{ position: 'relative' }}
-            >
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                }}
+              <Form.Item
+                {...formItemLayout}
+                label={
+                  <span>
+                    <span style={{ color: 'red' }}>*</span>&nbsp;
+                    {intl.formatMessage({ id: 'app.login.list.title.col1' })}
+                  </span>
+                }
+                name="username"
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({
+                      id: 'app.common.crud.validate.input',
+                    }),
+                  },
+                ]}
               >
-                {intl.formatMessage({ id: 'app.login.list.title.col4' })}
-                <i
-                  style={{ marginLeft: 10 }}
-                  className="fas fa-sign-in-alt"
-                ></i>
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
-      </Spin>
-    </section>
+                <Input
+                  placeholder={intl.formatMessage({
+                    id: 'app.login.list.title.username',
+                  })}
+                />
+              </Form.Item>
+
+              <Form.Item
+                {...formItemLayout}
+                label={
+                  <span>
+                    <span style={{ color: 'red' }}>*</span>&nbsp;
+                    {intl.formatMessage({ id: 'app.login.list.title.col2' })}
+                  </span>
+                }
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({
+                      id: 'app.common.crud.validate.input',
+                    }),
+                  },
+                ]}
+              >
+                <Input.Password
+                  placeholder={intl.formatMessage({
+                    id: 'app.login.list.title.password',
+                  })}
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="remember"
+                valuePropName="checked"
+                wrapperCol={{ span: 24 }}
+              >
+                <Checkbox>
+                  {' '}
+                  {intl.formatMessage({ id: 'app.login.list.title.col3' })}
+                </Checkbox>
+              </Form.Item>
+
+              <Form.Item
+                wrapperCol={{ span: 24 }}
+                style={{ position: 'relative' }}
+              >
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                  }}
+                >
+                  {intl.formatMessage({ id: 'app.login.list.title.col4' })}
+                  <i
+                    style={{ marginLeft: 10 }}
+                    className="fas fa-sign-in-alt"
+                  ></i>
+                </Button>
+              </Form.Item>
+            </Form>
+            <Link
+              style={{ marginBottom: 10 }}
+              onClick={() => setVisibleChangePassword(!visibleChangePassword)}
+            >
+              {intl.formatMessage({ id: 'app.change.list.title.title' })}?
+            </Link>
+            <Link
+              style={{ marginBottom: 50 }}
+              onClick={() => setVisibleForget(!visibleForget)}
+            >
+              {intl.formatMessage({ id: 'app.forgot.list.title.title0' })}?
+            </Link>
+          </div>
+        </Spin>
+      </section>
+      <ForgetPassword isMobile={isMobile} intl={intl} visible={visibleForget} />
+      <ChangePassword
+        isMobile={isMobile}
+        intl={intl}
+        visible={visibleChangePassword}
+      />
+    </>
   );
 };
 

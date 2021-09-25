@@ -13,6 +13,13 @@ const updateStatusUser = (id, params) =>
   axios.put(`${process.env.REACT_APP_SERVER}/user/updateStatus/${id}`, params);
 const deleteUser = (id) =>
   axios.delete(`${process.env.REACT_APP_SERVER}/user/${id}`);
+const changePasswordUserNotLogin = (params) =>
+  axios.post(
+    `${process.env.REACT_APP_SERVER}/user/changePasswordNotLogin`,
+    params
+  );
+const forgotPasswordUser = (params) =>
+  axios.post(`${process.env.REACT_APP_SERVER}/user/forgotPassword`, params);
 
 export {
   getListUser,
@@ -21,4 +28,6 @@ export {
   updateUser,
   updateStatusUser,
   deleteUser,
+  changePasswordUserNotLogin,
+  forgotPasswordUser,
 };

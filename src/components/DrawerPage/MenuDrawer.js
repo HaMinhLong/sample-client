@@ -65,7 +65,6 @@ const MenuDrawer = ({
       setData({});
     }
   };
-
   const openNotification = (type, message, color) => {
     notification[type]({
       message: message,

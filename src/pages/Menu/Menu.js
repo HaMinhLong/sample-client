@@ -50,7 +50,6 @@ const Menu = ({ isMobile, intl }) => {
   const [dataTree, setDataTree] = useState({});
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [permissions, setPermissions] = useState({});
-  console.log('permissions', permissions);
 
   useEffect(() => {
     getPermission();
@@ -207,7 +206,8 @@ const Menu = ({ isMobile, intl }) => {
                                 <FormattedMessage id="app.menu.list.change1" />
                               }
                               placement="topLeft"
-                              onConfirm={() => handleStatus(-1, item)}
+                              // onConfirm={() => handleStatus(-1, item)}
+                              onConfirm={() => handleDelete(item.id)}
                               okText="Ok"
                               cancelText={intl.formatMessage({
                                 id: 'app.common.deleteBtn.cancelText',
@@ -279,6 +279,27 @@ const Menu = ({ isMobile, intl }) => {
           setCurrent(res.results && res.results.pagination.current);
           setPageSize(res.results && res.results.pagination.pageSize);
           setTotal(res.results && res.results.pagination.total);
+        } else {
+          openNotification('error', res && res.message, '#fff1f0');
+        }
+      },
+    });
+  };
+
+  const handleDelete = (id) => {
+    dispatch({
+      type: 'menu/delete',
+      payload: {
+        id: id,
+      },
+      callback: (res) => {
+        if (res && res.success) {
+          openNotification(
+            'success',
+            intl.formatMessage({ id: 'app.common.delete.success' }),
+            '#f6ffed'
+          );
+          getList();
         } else {
           openNotification('error', res && res.message, '#fff1f0');
         }
@@ -442,7 +463,8 @@ const Menu = ({ isMobile, intl }) => {
                                 <FormattedMessage id="app.menu.list.change1" />
                               }
                               placement="topLeft"
-                              onConfirm={() => handleStatus(-1, item)}
+                              // onConfirm={() => handleStatus(-1, item)}
+                              onConfirm={() => handleDelete(item.id)}
                               okText="Ok"
                               cancelText={intl.formatMessage({
                                 id: 'app.common.deleteBtn.cancelText',
@@ -640,7 +662,8 @@ const Menu = ({ isMobile, intl }) => {
                                 <FormattedMessage id="app.menu.list.change1" />
                               }
                               placement="topLeft"
-                              onConfirm={() => handleStatus(-1, item)}
+                              // onConfirm={() => handleStatus(-1, item)}
+                              onConfirm={() => handleDelete(item.id)}
                               okText="Ok"
                               cancelText={intl.formatMessage({
                                 id: 'app.common.deleteBtn.cancelText',
@@ -741,7 +764,6 @@ const Menu = ({ isMobile, intl }) => {
             intl.formatMessage({ id: 'app.common.edit.success' }),
             '#f6ffed'
           );
-
           getList();
         } else {
           openNotification('error', result && result.message, '#fff1f0');
