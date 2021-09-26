@@ -62,7 +62,7 @@ const AccountInfo = ({ isMobile, intl, currentUser, getCurrentUser }) => {
   };
   return (
     <>
-      <h2>User information</h2>
+      <h2>{intl.formatMessage({ id: 'app.account.info.header' })}</h2>
       <Spin spinning={loading}>
         <Row className="account-info">
           <Col xs={24} md={12} lg={12} className="image-box">

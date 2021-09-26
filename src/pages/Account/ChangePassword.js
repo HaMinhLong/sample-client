@@ -52,7 +52,7 @@ const ChangePassword = ({ intl, token }) => {
   };
   return (
     <>
-      <h2>Change Password</h2>
+      <h2>{intl.formatMessage({ id: 'app.account.changePassword.header' })}</h2>
       <Row>
         <Col xs={24} md={24} lg={12}>
           <Spin spinning={loading}>

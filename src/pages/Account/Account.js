@@ -45,7 +45,9 @@ const Account = ({ isMobile, intl, headerPage }) => {
   return (
     <>
       {headerPage}
-      <HeaderContent title="Thiết lập tài khoản">
+      <HeaderContent
+        title={intl.formatMessage({ id: 'app.account.list.header' })}
+      >
         <Spin spinning={loading}>
           <div
             className="config"
@@ -81,8 +83,16 @@ const Account = ({ isMobile, intl, headerPage }) => {
                   onChange={(key) => setTabs(key)}
                   tabPosition={isMobile ? 'top' : 'left'}
                 >
-                  <TabPane tab="Thông tin cá nhân" key="1"></TabPane>
-                  <TabPane tab="Thay đổi mật khẩu" key="2"></TabPane>
+                  <TabPane
+                    tab={intl.formatMessage({ id: 'app.account.info.header' })}
+                    key="1"
+                  ></TabPane>
+                  <TabPane
+                    tab={intl.formatMessage({
+                      id: 'app.account.changePassword.header',
+                    })}
+                    key="2"
+                  ></TabPane>
                 </Tabs>
               </Col>
               <Col

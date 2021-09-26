@@ -4,6 +4,7 @@ const User = require('./en-US/User');
 const Menu = require('./en-US/Menu');
 const UserGroupRole = require('./en-US/UserGroupRole');
 const Login = require('./en-US/Login');
+const Account = require('./en-US/Account');
 
 module.exports = {
   'app.common.validate.max300':
@@ -84,4 +85,5 @@ module.exports = {
   ...Menu,
   ...UserGroupRole,
   ...Login,
+  ...Account,
 };

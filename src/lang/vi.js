@@ -4,6 +4,7 @@ const User = require('./vi-VN/User');
 const Menu = require('./vi-VN/Menu');
 const UserGroupRole = require('./vi-VN/UserGroupRole');
 const Login = require('./vi-VN/Login');
+const Account = require('./vi-VN/Account');
 
 module.exports = {
   'app.common.validate.max300':
@@ -85,4 +86,5 @@ module.exports = {
   ...Menu,
   ...UserGroupRole,
   ...Login,
+  ...Account,
 };
