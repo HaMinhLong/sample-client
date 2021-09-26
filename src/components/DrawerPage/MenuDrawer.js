@@ -95,7 +95,7 @@ const MenuDrawer = ({
             },
             callback: (res) => {
               setLoading(false);
-              if (res && res.success === true) {
+              if (res && <res className="success"></res>) {
                 openNotification(
                   'success',
                   intl.formatMessage({ id: 'app.common.edit.success' }),
@@ -103,7 +103,7 @@ const MenuDrawer = ({
                 );
                 changeDrawer('close');
                 getList(permissions);
-              } else if (res && res.success === false) {
+              } else {
                 openNotification('error', res && res.message, '#fff1f0');
               }
             },
@@ -114,7 +114,7 @@ const MenuDrawer = ({
             payload: addItem,
             callback: (res) => {
               setLoading(false);
-              if (res && res.success === true) {
+              if (res && res.success) {
                 openNotification(
                   'success',
                   intl.formatMessage(
@@ -125,7 +125,7 @@ const MenuDrawer = ({
                 );
                 changeDrawer('close');
                 getList(permissions);
-              } else if (res && res.success === false) {
+              } else {
                 openNotification('error', res && res.message, '#fff1f0');
               }
             },

@@ -91,7 +91,7 @@ const UserGroupDrawer = ({
             },
             callback: (res) => {
               setLoading(false);
-              if (res && res.success === true) {
+              if (res && res.success) {
                 openNotification(
                   'success',
                   intl.formatMessage({ id: 'app.common.edit.success' }),
@@ -99,7 +99,7 @@ const UserGroupDrawer = ({
                 );
                 getList();
                 changeDrawer('close');
-              } else if (res && res.success === false) {
+              } else {
                 openNotification('error', res && res.message, '#fff1f0');
               }
             },
@@ -110,7 +110,7 @@ const UserGroupDrawer = ({
             payload: addItem,
             callback: (res) => {
               setLoading(false);
-              if (res && res.success === true) {
+              if (res && res.success) {
                 openNotification(
                   'success',
                   intl.formatMessage(
@@ -121,7 +121,7 @@ const UserGroupDrawer = ({
                 );
                 getList();
                 changeDrawer('close');
-              } else if (res && res.success === false) {
+              } else {
                 openNotification('error', res && res.message, '#fff1f0');
               }
             },

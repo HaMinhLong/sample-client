@@ -1,0 +1,21 @@
+$screen-xs: 576px;
+
+.container > :not(.ant-dropdown-menu) {
+  background-color: #fff;
+  box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%),
+    0 9px 28px 8px rgb(0 0 0 / 5%);
+  border-radius: 4px;
+}
+.container {
+  .ant-dropdown-menu {
+    border-radius: 8px;
+  }
+}
+@media screen and (max-width: $screen-xs) {
+  .container {
+    width: 100% !important;
+  }
+  .container > * {
+    border-radius: 0 !important;
+  }
+}

@@ -1,0 +1,29 @@
+.config {
+  .ant-tabs {
+    padding-top: 30px;
+    .ant-tabs-nav {
+      width: 100%;
+      .ant-tabs-tab-active {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        font-weight: 600;
+        background: #e1f4fa;
+      }
+    }
+  }
+  h2 {
+    color: #196ca6;
+    border-bottom: 1px solid #f1f1f1;
+    margin-bottom: 20px;
+  }
+  .account-info {
+    .image-box {
+      display: flex;
+      justify-content: center;
+      img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+      }
+    }
+  }
+}

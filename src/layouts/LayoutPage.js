@@ -5,15 +5,17 @@ import AppRoutes from '../routes/AppRoutes';
 const { Content } = Layout;
 
 const LayoutPage = ({ localLanguage, setLocalLanguage }) => {
+  const headerPage = (
+    <HeaderPage
+      localLanguage={localLanguage}
+      setLocalLanguage={setLocalLanguage}
+    />
+  );
   return (
     <>
       <Layout className="layout">
-        <HeaderPage
-          localLanguage={localLanguage}
-          setLocalLanguage={setLocalLanguage}
-        />
         <Content>
-          <AppRoutes />
+          <AppRoutes headerPage={headerPage} />
         </Content>
       </Layout>
     </>

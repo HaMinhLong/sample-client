@@ -13,6 +13,20 @@ const updateStatusUser = (id, params) =>
   axios.put(`${process.env.REACT_APP_SERVER}/user/updateStatus/${id}`, params);
 const deleteUser = (id) =>
   axios.delete(`${process.env.REACT_APP_SERVER}/user/${id}`);
+const currentUser = (params) =>
+  axios({
+    method: 'post',
+    url: `${process.env.REACT_APP_SERVER}/user/currentUser`,
+    headers: { 'x-access-token': params },
+  });
+const changePasswordUserLogin = (token, params) =>
+  axios({
+    method: 'post',
+    url: `${process.env.REACT_APP_SERVER}/user/changePasswordLogin`,
+    headers: { 'x-access-token': token },
+    data: params,
+  });
+
 const changePasswordUserNotLogin = (params) =>
   axios.post(
     `${process.env.REACT_APP_SERVER}/user/changePasswordNotLogin`,
@@ -28,6 +42,8 @@ export {
   updateUser,
   updateStatusUser,
   deleteUser,
+  currentUser,
+  changePasswordUserLogin,
   changePasswordUserNotLogin,
   forgotPasswordUser,
 };

@@ -87,8 +87,7 @@ const UserGroupDrawer = ({
               },
             },
             callback: (res) => {
-              setLoading(false);
-              if (res && res.success === true) {
+              if (res && res.success) {
                 openNotification(
                   'success',
                   intl.formatMessage({ id: 'app.common.edit.success' }),
@@ -96,9 +95,10 @@ const UserGroupDrawer = ({
                 );
                 getList();
                 changeDrawer('close');
-              } else if (res && res.success === false) {
-                openNotification('error', res && res.message, '#fff1f0');
+              } else {
+                openNotification('error', res.message, '#fff1f0');
               }
+              setLoading(false);
             },
           });
         } else {
@@ -106,8 +106,7 @@ const UserGroupDrawer = ({
             type: 'userGroup/add',
             payload: addItem,
             callback: (res) => {
-              setLoading(false);
-              if (res && res.success === true) {
+              if (res && res.success) {
                 openNotification(
                   'success',
                   intl.formatMessage(
@@ -118,9 +117,10 @@ const UserGroupDrawer = ({
                 );
                 getList();
                 changeDrawer('close');
-              } else if (res && res.success === false) {
-                openNotification('error', res && res.message, '#fff1f0');
+              } else {
+                openNotification('error', res.message, '#fff1f0');
               }
+              setLoading(false);
             },
           });
         }
@@ -158,7 +158,6 @@ const UserGroupDrawer = ({
       width={isMobile ? '100%' : 420}
       onClose={() => changeDrawer('close')}
       visible={visibleDrawer}
-      style={{ zIndex: 10000000 }}
       footer={
         <div
           style={{

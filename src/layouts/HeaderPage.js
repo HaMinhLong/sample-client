@@ -1,42 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Tooltip, Popconfirm, Button } from 'antd';
+import { Layout, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import logo from '../assets/logo.svg';
-import vietnam from '../assets/vietnam.svg';
-import english from '../assets/english.svg';
-import { UserOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import RightContentHeader from '../components/RightContentHeader/RightContentHeader';
+import { userGroupRole } from '../features/userGroupRole/userGroupRoleSlice';
 
 const { Header } = Layout;
 const { SubMenu } = Menu;
 
 const HeaderPage = ({ localLanguage, setLocalLanguage }) => {
+  const permissionsAll = useSelector(userGroupRole);
   const intl = useIntl();
   const dispatch = useDispatch();
-  const [permissions, setPermissions] = useState([]);
+  const [permissions, setPermissions] = useState(
+    permissionsAll.dataAll.list || []
+  );
   const token = localStorage.getItem('token');
-  const username = localStorage.getItem('username');
   useEffect(() => {
-    dispatch({
-      type: 'userGroupRole/authRole',
-      payload: token,
-      callback: (res) => {
-        if (res && res.success) {
-          const { list } = res.results;
-          setPermissions(list);
-        } else {
-        }
-      },
-    });
+    if (
+      permissions.length === 0 ||
+      permissionsAll.dataAll.list !== permissions
+    ) {
+      dispatch({
+        type: 'userGroupRole/authRole',
+        payload: token,
+        callback: (res) => {
+          if (res && res.success) {
+            const { list } = res.results;
+            setPermissions(list);
+          } else {
+          }
+        },
+      });
+    }
   }, []);
-  const logOut = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    localStorage.removeItem('userGroupId');
-    localStorage.removeItem('id');
-    window.location = '/';
-  };
+
   const changeLanguage = () => {
     const localLanguageToggle = localLanguage === 'en-US' ? 'vi-VI' : 'en-US';
     localStorage.setItem('lang', localLanguageToggle);
@@ -46,7 +46,7 @@ const HeaderPage = ({ localLanguage, setLocalLanguage }) => {
     <Header id="components-layout-demo-top">
       <div>
         <Link to="/">
-          <img className="logo" src={logo} alt="" />
+          <img width="40" height="40" className="logo" src={logo} alt="" />
         </Link>
         <Menu mode="horizontal" defaultSelectedKeys={['1']}>
           <Menu.Item key="1">
@@ -97,36 +97,11 @@ const HeaderPage = ({ localLanguage, setLocalLanguage }) => {
         </Menu>
       </div>
       <div className="header-box">
-        <Tooltip
-          placement="bottomRight"
-          title={intl.formatMessage({ id: 'app.common.switch.lang' })}
-        >
-          <img
-            src={localLanguage === 'en-US' ? english : vietnam}
-            alt=""
-            className="language-icon"
-            onClick={() => changeLanguage()}
-          />
-        </Tooltip>
-        <Tooltip placement="bottomRight" title={username || ''}>
-          <Popconfirm
-            title={intl.formatMessage({ id: 'app.login.list.title.logout' })}
-            onConfirm={logOut}
-            okText={
-              <>
-                {intl.formatMessage({ id: 'app.login.list.title.yes' })}
-                <i style={{ marginLeft: 5 }} className="fas fa-sign-in-alt"></i>
-              </>
-            }
-            cancelText={intl.formatMessage({ id: 'app.login.list.title.no' })}
-          >
-            <Button
-              style={{ marginLeft: 10 }}
-              shape="circle"
-              icon={<UserOutlined />}
-            ></Button>
-          </Popconfirm>
-        </Tooltip>
+        <RightContentHeader
+          localLanguage={localLanguage}
+          changeLanguage={changeLanguage}
+          intl={intl}
+        />
       </div>
     </Header>
   );

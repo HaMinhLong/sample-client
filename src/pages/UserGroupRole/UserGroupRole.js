@@ -15,9 +15,9 @@ import Table from '../../components/Table';
 
 const PAGE_SIZE = 50;
 
-const UserGroupRole = ({ isMobile, intl }) => {
+const UserGroupRole = ({ isMobile, intl, headerPage }) => {
   const dispatch = useDispatch();
-
+  const token = localStorage.getItem('token');
   let { id } = useParams();
   let history = useHistory();
   const dataAll = useSelector(userGroupRole);
@@ -107,7 +107,11 @@ const UserGroupRole = ({ isMobile, intl }) => {
             intl.formatMessage({ id: 'app.common.permissions.success' }),
             '#f6ffed'
           );
-          window.location = `/grant-permissions/${id}`;
+          dispatch({
+            type: 'userGroupRole/authRole',
+            payload: token,
+          });
+          // window.location = `/grant-permissions/${id}`;
           getList();
         } else {
           openNotification('error', res && res.message, '#fff1f0');
@@ -435,69 +439,74 @@ const UserGroupRole = ({ isMobile, intl }) => {
     },
   ];
   return (
-    <HeaderContent
-      title={<FormattedMessage id="app.userGroupRole.list.header" />}
-      action={
-        <React.Fragment>
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Tooltip
-              title={
-                !isMobile && intl.formatMessage({ id: 'app.common.crudBtns.0' })
-              }
-            >
-              <Button
-                icon={
-                  <i
-                    className="far fa-arrow-alt-circle-left"
-                    style={{ marginRight: '5px' }}
-                  />
+    <>
+      {headerPage}
+      <HeaderContent
+        title={<FormattedMessage id="app.userGroupRole.list.header" />}
+        action={
+          <React.Fragment>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Tooltip
+                title={
+                  !isMobile &&
+                  intl.formatMessage({ id: 'app.common.crudBtns.0' })
                 }
-                onClick={() => history.goBack()}
               >
-                {intl.formatMessage({ id: 'app.common.crudBtns.0' })}
-              </Button>
-            </Tooltip>
-            <Tooltip
-              title={
-                !isMobile && intl.formatMessage({ id: 'app.user.permissions' })
-              }
-            >
-              <Button
-                type="primary"
-                icon={
-                  <i className="fa fa-save" style={{ marginRight: '5px' }} />
+                <Button
+                  icon={
+                    <i
+                      className="far fa-arrow-alt-circle-left"
+                      style={{ marginRight: '5px' }}
+                    />
+                  }
+                  onClick={() => history.goBack()}
+                >
+                  {intl.formatMessage({ id: 'app.common.crudBtns.0' })}
+                </Button>
+              </Tooltip>
+              <Tooltip
+                title={
+                  !isMobile &&
+                  intl.formatMessage({ id: 'app.user.permissions' })
                 }
-                style={{ marginLeft: 10 }}
-                onClick={updateRole}
               >
-                {intl.formatMessage({ id: 'app.user.permissions' })}
-              </Button>
-            </Tooltip>
-          </div>
-        </React.Fragment>
-      }
-    >
-      <Table
-        loading={loading}
-        defaultExpandAllRows
-        expandedRowKeys={difference.map(
-          (item) =>
-            `${item.id}-${item.isView}-${item.isAdd}-${item.isUpdate}-${item.isDelete}-${item.isBlock}-${item.isApprove}`
-        )}
-        bordered
-        rowKey={(record) =>
-          `${record.id}-${record.isView}-${record.isAdd}-${record.isUpdate}-${record.isDelete}-${record.isBlock}-${record.isApprove}`
+                <Button
+                  type="primary"
+                  icon={
+                    <i className="fa fa-save" style={{ marginRight: '5px' }} />
+                  }
+                  style={{ marginLeft: 10 }}
+                  onClick={updateRole}
+                >
+                  {intl.formatMessage({ id: 'app.user.permissions' })}
+                </Button>
+              </Tooltip>
+            </div>
+          </React.Fragment>
         }
-        scroll={{ x: isMobile ? 1200 : '100vh', y: '70vhh' }}
-        dataSource={difference || []}
-        columns={columns}
-        pagination="none"
-        expandable={{
-          expandIcon: () => null,
-        }}
-        onExpand={(expanded) => (expanded = true)}
-      />
-    </HeaderContent>
+      >
+        <Table
+          loading={loading}
+          defaultExpandAllRows
+          expandedRowKeys={difference.map(
+            (item) =>
+              `${item.id}-${item.isView}-${item.isAdd}-${item.isUpdate}-${item.isDelete}-${item.isBlock}-${item.isApprove}`
+          )}
+          bordered
+          rowKey={(record) =>
+            `${record.id}-${record.isView}-${record.isAdd}-${record.isUpdate}-${record.isDelete}-${record.isBlock}-${record.isApprove}`
+          }
+          scroll={{ x: isMobile ? 1200 : '100vh', y: '70vhh' }}
+          dataSource={difference || []}
+          columns={columns}
+          pagination="none"
+          expandable={{
+            expandIcon: () => null,
+          }}
+          onExpand={(expanded) => (expanded = true)}
+        />
+      </HeaderContent>
+    </>
   );
 };
 export default UserGroupRole;

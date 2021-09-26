@@ -13,7 +13,9 @@ import {
   notification,
   Tooltip,
   Popconfirm,
+  Result,
 } from 'antd';
+import { Link } from 'react-router-dom';
 import HeaderContent from '../../layouts/HeaderContent';
 import Table from '../../components/Table';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,7 +34,7 @@ import { useParams } from 'react-router-dom';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
-const User = ({ isMobile, intl }) => {
+const User = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
   const dispatch = useDispatch();
@@ -732,68 +734,87 @@ const User = ({ isMobile, intl }) => {
   ];
   return (
     <>
-      <HeaderContent
-        title={<FormattedMessage id="app.user.list.header" />}
-        action={
-          <React.Fragment>
-            {permissions.isAdd && (
-              <Tooltip
-                title={
-                  !isMobile &&
-                  intl.formatMessage({ id: 'app.user.create.header' })
-                }
-              >
-                <Button
-                  icon={
-                    <i className="fas fa-plus" style={{ marginRight: '5px' }} />
-                  }
-                  onClick={() => {
-                    setVisibleDrawer(!visibleDrawer);
-                    setDataEdit({});
-                  }}
-                >
-                  {intl.formatMessage(
-                    { id: 'app.title.create' },
-                    { name: '(F2)' }
-                  )}
-                </Button>
-              </Tooltip>
-            )}
-          </React.Fragment>
-        }
-      >
-        <div className="tableListForm">{renderForm()}</div>
-        <div
-          className="buttonModalFilter"
-          onClick={() => setVisibleFilter(true)}
-        >
-          {intl.formatMessage({ id: 'app.common.searchBtn' })}&nbsp;
-          <img width="25" height="25" src={filterIcon} alt="tìm kiếm" />
-        </div>
-        <Modal
-          title={intl.formatMessage({ id: 'app.common.searchBtn' })}
-          width="100%"
-          style={{ top: 0 }}
-          maskStyle={{
-            background: '#fff',
-          }}
-          visible={visibleFilter}
-          className="modalFilter"
-          onCancel={() => setVisibleFilter(false)}
-          footer={[]}
-        >
-          {renderForm()}
-        </Modal>
-        <Table
-          loading={loading}
-          rowKey="id"
-          dataSource={data}
-          pagination={pagination}
-          scroll={{ x: isMobile ? 1200 : '100vh', y: '60vh' }}
-          columns={columns}
-          onChange={handleTableChange}
+      {permissions ? (
+        <>
+          {headerPage}
+          <HeaderContent
+            title={<FormattedMessage id="app.user.list.header" />}
+            action={
+              <React.Fragment>
+                {permissions.isAdd && (
+                  <Tooltip
+                    title={
+                      !isMobile &&
+                      intl.formatMessage({ id: 'app.user.create.header' })
+                    }
+                  >
+                    <Button
+                      icon={
+                        <i
+                          className="fas fa-plus"
+                          style={{ marginRight: '5px' }}
+                        />
+                      }
+                      onClick={() => {
+                        setVisibleDrawer(!visibleDrawer);
+                        setDataEdit({});
+                      }}
+                    >
+                      {intl.formatMessage(
+                        { id: 'app.title.create' },
+                        { name: '(F2)' }
+                      )}
+                    </Button>
+                  </Tooltip>
+                )}
+              </React.Fragment>
+            }
+          >
+            <div className="tableListForm">{renderForm()}</div>
+            <div
+              className="buttonModalFilter"
+              onClick={() => setVisibleFilter(true)}
+            >
+              {intl.formatMessage({ id: 'app.common.searchBtn' })}&nbsp;
+              <img width="25" height="25" src={filterIcon} alt="tìm kiếm" />
+            </div>
+            <Modal
+              title={intl.formatMessage({ id: 'app.common.searchBtn' })}
+              width="100%"
+              style={{ top: 0 }}
+              maskStyle={{
+                background: '#fff',
+              }}
+              visible={visibleFilter}
+              className="modalFilter"
+              onCancel={() => setVisibleFilter(false)}
+              footer={[]}
+            >
+              {renderForm()}
+            </Modal>
+            <Table
+              loading={loading}
+              rowKey="id"
+              dataSource={data}
+              pagination={pagination}
+              scroll={{ x: isMobile ? 1200 : '100vh', y: '60vh' }}
+              columns={columns}
+              onChange={handleTableChange}
+            />
+          </HeaderContent>
+        </>
+      ) : (
+        <Result
+          status="403"
+          title="403"
+          subTitle="Sorry, you are not authorized to access this page."
+          extra={
+            <Button type="primary">
+              <Link to="/">Back Home</Link>
+            </Button>
+          }
         />
-      </HeaderContent>
+      )}
       <UserDrawer
         intl={intl}
         isMobile={isMobile}

@@ -330,7 +330,6 @@ export const getQueryString = (field, url) => {
 };
 
 export const scrollToTop = () => {
-  // console.log(topScroll)
   if (typeof window !== 'undefined') {
     window.scrollTo({
       top: 0,
@@ -341,7 +340,6 @@ export const scrollToTop = () => {
 };
 
 export const scrollToTopCustom = () => {
-  // console.log(topScroll)
   if (typeof window !== 'undefined') {
     window.scrollTo({
       top: 70,

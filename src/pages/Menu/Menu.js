@@ -17,7 +17,9 @@ import {
   Checkbox,
   Tag,
   DatePicker,
+  Result,
 } from 'antd';
+import { Link } from 'react-router-dom';
 import HeaderContent from '../../layouts/HeaderContent';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
@@ -33,7 +35,7 @@ const FormItem = Form.Item;
 
 const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
 
-const Menu = ({ isMobile, intl }) => {
+const Menu = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
   const dispatch = useDispatch();
@@ -299,7 +301,7 @@ const Menu = ({ isMobile, intl }) => {
             intl.formatMessage({ id: 'app.common.delete.success' }),
             '#f6ffed'
           );
-          getList();
+          getList(permissions);
         } else {
           openNotification('error', res && res.message, '#fff1f0');
         }
@@ -1084,112 +1086,136 @@ const Menu = ({ isMobile, intl }) => {
   };
   return (
     <>
-      <HeaderContent
-        title={<FormattedMessage id="app.menu.list.header" />}
-        action={
-          <React.Fragment>
-            {permissions.isAdd && (
-              <Tooltip
-                title={
-                  !isMobile &&
-                  intl.formatMessage({ id: 'app.menu.create.header' })
-                }
-              >
-                <Button
-                  icon={
-                    <i className="fas fa-plus" style={{ marginRight: '5px' }} />
-                  }
-                  onClick={() => {
-                    setVisibleDrawer(!visibleDrawer);
-                    setDataEdit({});
-                  }}
-                >
-                  {intl.formatMessage(
-                    { id: 'app.title.create' },
-                    { name: '(F2)' }
-                  )}
-                </Button>
-              </Tooltip>
-            )}
-          </React.Fragment>
-        }
-      >
-        <div className="tableListForm">{renderForm()}</div>
-        <div
-          className="buttonModalFilter"
-          onClick={() => setVisibleFilter(true)}
-        >
-          {intl.formatMessage({ id: 'app.common.searchBtn' })}&nbsp;
-          <img width="25" height="25" src={filterIcon} alt="tìm kiếm" />
-        </div>
-        <Modal
-          title={intl.formatMessage({ id: 'app.common.searchBtn' })}
-          width="100%"
-          style={{ top: 0 }}
-          maskStyle={{
-            background: '#fff',
-          }}
-          visible={visibleFilter}
-          className="modalFilter"
-          onCancel={() => setVisibleFilter(false)}
-          footer={[]}
-        >
-          {renderForm()}
-        </Modal>
-        <div className="renderTree">
-          <Row className="dragtreeTitle">
-            <Col sm={10} className="row_8" style={{ color: '#fff' }}>
-              {intl.formatMessage({ id: 'app.menu.list.col0' })}
-            </Col>
-            <Col sm={3} className="row_3" style={{ color: '#fff' }}>
-              {intl.formatMessage({ id: 'app.common.placeholder.dateCreated' })}
-            </Col>
-            <Col sm={3} className="row_3" style={{ color: '#fff' }}>
-              {intl.formatMessage({ id: 'app.common.placeholder.dateUpdated' })}{' '}
-            </Col>
-            <Col sm={3} className="row_5" style={{ color: '#fff' }}>
-              {intl.formatMessage({ id: 'app.search.status' })}
-            </Col>
-            <Col
-              sm={5}
-              className="row_5"
-              style={{ textAlign: 'right', color: '#fff' }}
+      {permissions ? (
+        <>
+          {headerPage}
+          <HeaderContent
+            title={<FormattedMessage id="app.menu.list.header" />}
+            action={
+              <React.Fragment>
+                {permissions.isAdd && (
+                  <Tooltip
+                    title={
+                      !isMobile &&
+                      intl.formatMessage({ id: 'app.menu.create.header' })
+                    }
+                  >
+                    <Button
+                      icon={
+                        <i
+                          className="fas fa-plus"
+                          style={{ marginRight: '5px' }}
+                        />
+                      }
+                      onClick={() => {
+                        setVisibleDrawer(!visibleDrawer);
+                        setDataEdit({});
+                      }}
+                    >
+                      {intl.formatMessage(
+                        { id: 'app.title.create' },
+                        { name: '(F2)' }
+                      )}
+                    </Button>
+                  </Tooltip>
+                )}
+              </React.Fragment>
+            }
+          >
+            <div className="tableListForm">{renderForm()}</div>
+            <div
+              className="buttonModalFilter"
+              onClick={() => setVisibleFilter(true)}
             >
-              {intl.formatMessage({ id: 'app.table.column.no' })}
-            </Col>
-          </Row>
-          <Spin spinning={loading}>
-            {gData.length > 0 ? (
-              <>
-                <Tree
-                  className="dragtree"
-                  defaultExpandedKeys={expandedKeys}
-                  draggable
-                  blockNode
-                  onDrop={onDrop}
-                  treeData={gData}
-                />
-                <Pagination
-                  size="small"
-                  key={current}
-                  style={{
-                    background: '#FAFAFA',
-                    width: '100%',
-                    textAlign: 'right',
-                    padding: '10px 0',
-                  }}
-                  total={total}
-                  pageSize={pageSize}
-                  showSizeChanger={false}
-                  onChange={handleChange}
-                />
-              </>
-            ) : (
-              <div className="noData">Không có dữ liệu</div>
-            )}
-          </Spin>
-        </div>
-      </HeaderContent>
+              {intl.formatMessage({ id: 'app.common.searchBtn' })}&nbsp;
+              <img width="25" height="25" src={filterIcon} alt="tìm kiếm" />
+            </div>
+            <Modal
+              title={intl.formatMessage({ id: 'app.common.searchBtn' })}
+              width="100%"
+              style={{ top: 0 }}
+              maskStyle={{
+                background: '#fff',
+              }}
+              visible={visibleFilter}
+              className="modalFilter"
+              onCancel={() => setVisibleFilter(false)}
+              footer={[]}
+            >
+              {renderForm()}
+            </Modal>
+            <div className="renderTree">
+              <Row className="dragtreeTitle">
+                <Col sm={10} className="row_8" style={{ color: '#fff' }}>
+                  {intl.formatMessage({ id: 'app.menu.list.col0' })}
+                </Col>
+                <Col sm={3} className="row_3" style={{ color: '#fff' }}>
+                  {intl.formatMessage({
+                    id: 'app.common.placeholder.dateCreated',
+                  })}
+                </Col>
+                <Col sm={3} className="row_3" style={{ color: '#fff' }}>
+                  {intl.formatMessage({
+                    id: 'app.common.placeholder.dateUpdated',
+                  })}{' '}
+                </Col>
+                <Col sm={3} className="row_5" style={{ color: '#fff' }}>
+                  {intl.formatMessage({ id: 'app.search.status' })}
+                </Col>
+                <Col
+                  sm={5}
+                  className="row_5"
+                  style={{ textAlign: 'right', color: '#fff' }}
+                >
+                  {intl.formatMessage({ id: 'app.table.column.no' })}
+                </Col>
+              </Row>
+              <Spin spinning={loading}>
+                {gData.length > 0 ? (
+                  <>
+                    <Tree
+                      className="dragtree"
+                      defaultExpandedKeys={expandedKeys}
+                      draggable
+                      blockNode
+                      onDrop={onDrop}
+                      treeData={gData}
+                    />
+                    <Pagination
+                      size="small"
+                      key={current}
+                      style={{
+                        background: '#FAFAFA',
+                        width: '100%',
+                        textAlign: 'right',
+                        padding: '10px 0',
+                      }}
+                      total={total}
+                      pageSize={pageSize}
+                      showSizeChanger={false}
+                      onChange={handleChange}
+                    />
+                  </>
+                ) : (
+                  <div className="noData">Không có dữ liệu</div>
+                )}
+              </Spin>
+            </div>
+          </HeaderContent>
+        </>
+      ) : (
+        <Result
+          status="403"
+          title="403"
+          subTitle="Sorry, you are not authorized to access this page."
+          extra={
+            <Button type="primary">
+              <Link to="/">Back Home</Link>
+            </Button>
+          }
+        />
+      )}
+
       <MenuDrawer
         intl={intl}
         isMobile={isMobile}
