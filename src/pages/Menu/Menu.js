@@ -141,7 +141,19 @@ const Menu = ({ isMobile, intl, headerPage }) => {
                       <Col sm={10} className="row_10">
                         {permission.isBlock && (
                           <Tooltip
-                            title={item.status === 1 ? 'Kích hoạt' : 'Ẩn'}
+                            title={
+                              item.status === 1
+                                ? intl.formatMessage({
+                                    id: 'app.common.statusTag.1',
+                                  })
+                                : item.status === 0
+                                ? intl.formatMessage({
+                                    id: 'app.common.statusTag.0',
+                                  })
+                                : intl.formatMessage({
+                                    id: 'app.common.statusTag.-1',
+                                  })
+                            }
                           >
                             <Popconfirm
                               title={
@@ -398,7 +410,19 @@ const Menu = ({ isMobile, intl, headerPage }) => {
                       <Col sm={10} className="row_10">
                         {permissions.isBlock && (
                           <Tooltip
-                            title={item.status === 1 ? 'Kích hoạt' : 'Ẩn'}
+                            title={
+                              item.status === 1
+                                ? intl.formatMessage({
+                                    id: 'app.common.statusTag.1',
+                                  })
+                                : item.status === 0
+                                ? intl.formatMessage({
+                                    id: 'app.common.statusTag.0',
+                                  })
+                                : intl.formatMessage({
+                                    id: 'app.common.statusTag.-1',
+                                  })
+                            }
                           >
                             <Popconfirm
                               title={
@@ -593,10 +617,16 @@ const Menu = ({ isMobile, intl, headerPage }) => {
                           <Tooltip
                             title={
                               item.status === 1
-                                ? 'Kích hoạt'
+                                ? intl.formatMessage({
+                                    id: 'app.common.statusTag.1',
+                                  })
                                 : item.status === 0
-                                ? 'Ẩn'
-                                : 'Chờ xóa'
+                                ? intl.formatMessage({
+                                    id: 'app.common.statusTag.0',
+                                  })
+                                : intl.formatMessage({
+                                    id: 'app.common.statusTag.-1',
+                                  })
                             }
                           >
                             <Popconfirm
@@ -766,7 +796,7 @@ const Menu = ({ isMobile, intl, headerPage }) => {
             intl.formatMessage({ id: 'app.common.edit.success' }),
             '#f6ffed'
           );
-          getList();
+          getList(permissions);
         } else {
           openNotification('error', result && result.message, '#fff1f0');
         }
@@ -835,7 +865,7 @@ const Menu = ({ isMobile, intl, headerPage }) => {
                 intl.formatMessage({ id: 'app.common.edit.success' }),
                 '#f6ffed'
               );
-              getList();
+              getList(permissions);
             } else if (result && result.success === false) {
               setLoading(false);
               openNotification('error', result && result.message, '#fff1f0');
@@ -949,7 +979,7 @@ const Menu = ({ isMobile, intl, headerPage }) => {
                 intl.formatMessage({ id: 'app.common.edit.success' }),
                 '#f6ffed'
               );
-              getList();
+              getList(permissions);
             }
             setLoading(false);
           },

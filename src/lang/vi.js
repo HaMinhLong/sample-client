@@ -24,7 +24,7 @@ module.exports = {
   'app.search.status': 'Trạng thái',
   'app.common.action': '#',
   'app.common.deleteBtn.cancelText': 'Hủy',
-  'app.common.statusTag.-1': 'Xóa tạm',
+  'app.common.statusTag.-1': 'Chờ xóa',
   'app.common.statusTag.-2': 'Chờ kích hoạt',
   'app.common.statusTag.-3': 'Chờ duyệt',
   'app.common.statusTag.1': 'Kích hoạt',
