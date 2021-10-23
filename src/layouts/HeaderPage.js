@@ -11,25 +11,20 @@ const { Header } = Layout;
 const { SubMenu } = Menu;
 
 const HeaderPage = ({ localLanguage, setLocalLanguage }) => {
-  const permissionsAll = useSelector(userGroupRole);
+  const menusAll = useSelector(userGroupRole);
   const intl = useIntl();
   const dispatch = useDispatch();
-  const [permissions, setPermissions] = useState(
-    permissionsAll.dataAll.list || []
-  );
+  const [menus, setMenus] = useState(menusAll.dataAll.list || []);
   const token = localStorage.getItem('token');
   useEffect(() => {
-    if (
-      permissions.length === 0 ||
-      permissionsAll.dataAll.list !== permissions
-    ) {
+    if (menus.length === 0 || menusAll.dataAll.list !== menus) {
       dispatch({
         type: 'userGroupRole/authRole',
         payload: token,
         callback: (res) => {
           if (res && res.success) {
             const { list } = res.results;
-            setPermissions(list);
+            setMenus(list);
           } else {
           }
         },
@@ -48,20 +43,29 @@ const HeaderPage = ({ localLanguage, setLocalLanguage }) => {
         <Link to="/">
           <img width="40" height="40" className="logo" src={logo} alt="" />
         </Link>
-        <Menu mode="horizontal" defaultSelectedKeys={['1']}>
-          <Menu.Item key="1">
+        {/* defaultSelectedKeys={['1']} */}
+        <Menu mode="horizontal">
+          <Menu.Item
+            key="1"
+            icon={
+              <i style={{ color: '#fff' }} className="fas fa-chart-line"></i>
+            }
+          >
             <Link to="/">Dashboard</Link>
           </Menu.Item>
-          {permissions &&
-            permissions.length > 0 &&
-            permissions.map((permission) => (
-              <>
-                {permission.children && permission.children.length > 0 ? (
+          {menus &&
+            menus.length > 0 &&
+            menus.map((menu) => (
+              <React.Fragment key={menu.id}>
+                {menu.children && menu.children.length > 0 ? (
                   <SubMenu
-                    key={permission.id}
-                    title={permission.menuName || ''}
+                    key={menu.id}
+                    title={menu.menuName || ''}
+                    icon={
+                      <i style={{ color: '#fff' }} className={menu.icon}></i>
+                    }
                   >
-                    {permission.children.map((child) => (
+                    {menu.children.map((child) => (
                       <Menu.Item key={child.id}>
                         <Link to={`${child.url}/${child.id}`}>
                           {child.menuName || ''}
@@ -70,13 +74,18 @@ const HeaderPage = ({ localLanguage, setLocalLanguage }) => {
                     ))}
                   </SubMenu>
                 ) : (
-                  <Menu.Item key={permission.id}>
-                    <Link to={`${permission.url}/${permission.id}`}>
-                      {permission.menuName || ''}
+                  <Menu.Item
+                    key={menu.id}
+                    icon={
+                      <i style={{ color: '#fff' }} className={menu.icon}></i>
+                    }
+                  >
+                    <Link to={`${menu.url}/${menu.id}`}>
+                      {menu.menuName || ''}
                     </Link>
                   </Menu.Item>
                 )}
-              </>
+              </React.Fragment>
             ))}
           {/* <SubMenu key="he-thong" title="Hệ thống">
             <Menu.Item key="2">

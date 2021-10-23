@@ -21,6 +21,12 @@ module.exports = {
   'app.user.search.col3': 'Search by email',
   'app.user.search.col4': 'Search by mobile',
 
+  // upload
+  'app.user.upload.title': 'Import account list from Excel file!',
+  'app.user.upload.success': 'File upload successful!',
+  'app.user.upload.import': 'Import from Excel file',
+  'app.user.upload.download': 'Download the sample file',
+
   // placeholder
   'app.user.list.username': 'Enter username',
   'app.user.list.password': 'Enter password',

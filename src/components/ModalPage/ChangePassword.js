@@ -156,6 +156,7 @@ const ChangePassword = ({ intl, visible }) => {
                 placeholder={intl.formatMessage({
                   id: 'app.user.list.username',
                 })}
+                prefix={<i className="fas fa-user"></i>}
               />
             </FormItem>
             <FormItem
@@ -187,6 +188,7 @@ const ChangePassword = ({ intl, visible }) => {
                 placeholder={intl.formatMessage({
                   id: 'app.user.list.password',
                 })}
+                prefix={<i className="fas fa-lock"></i>}
               />
             </FormItem>
             <FormItem
@@ -219,6 +221,7 @@ const ChangePassword = ({ intl, visible }) => {
                 placeholder={intl.formatMessage({
                   id: 'app.login.list.title.newPassword',
                 })}
+                prefix={<i className="fas fa-lock"></i>}
               />
             </FormItem>
             <FormItem
@@ -260,6 +263,7 @@ const ChangePassword = ({ intl, visible }) => {
                 placeholder={intl.formatMessage({
                   id: 'app.login.list.title.confirmNewPassword',
                 })}
+                prefix={<i className="fas fa-lock"></i>}
               />
             </FormItem>
           </Form>

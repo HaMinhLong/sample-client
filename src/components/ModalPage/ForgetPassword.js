@@ -156,6 +156,7 @@ const ForgetPassword = ({ intl, visible }) => {
                 placeholder={intl.formatMessage({
                   id: 'app.user.list.email',
                 })}
+                prefix={<i className="fas fa-envelope"></i>}
               />
             </FormItem>
           </Form>

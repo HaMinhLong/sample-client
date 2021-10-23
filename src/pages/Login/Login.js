@@ -107,6 +107,7 @@ const Login = ({ isMobile, intl }) => {
                   placeholder={intl.formatMessage({
                     id: 'app.login.list.title.username',
                   })}
+                  prefix={<i className="fas fa-user"></i>}
                 />
               </Form.Item>
 
@@ -132,6 +133,7 @@ const Login = ({ isMobile, intl }) => {
                   placeholder={intl.formatMessage({
                     id: 'app.login.list.title.password',
                   })}
+                  prefix={<i className="fas fa-lock"></i>}
                 />
               </Form.Item>
 

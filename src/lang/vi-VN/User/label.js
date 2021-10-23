@@ -21,6 +21,12 @@ module.exports = {
   'app.user.search.col3': 'Tìm kiếm theo email',
   'app.user.search.col4': 'Tìm kiếm theo số điện thoại',
 
+  // upload
+  'app.user.upload.title': 'Nhập danh sách tài khoản từ tệp Excel!',
+  'app.user.upload.success': 'Tải tệp lên thành công!',
+  'app.user.upload.import': 'Nhập từ tệp Excel',
+  'app.user.upload.download': 'Tải xuống tệp mẫu',
+
   // placeholder
   'app.user.list.username': 'Nhập tên tài khoản',
   'app.user.list.password': 'Nhập mật khẩu',

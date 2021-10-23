@@ -30,6 +30,7 @@ import { formatNumber } from '../../utils/utils';
 import UserDrawer from '../../components/DrawerPage/UserDrawer';
 import UserGroupSelect from '../../components/Common/UserGroupSelect';
 import { useParams } from 'react-router-dom';
+import UploadMultipleUser from '../../components/ModalPage/UploadMultipleUser';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -44,6 +45,9 @@ const User = ({ isMobile, intl, headerPage }) => {
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
   const [permissions, setPermissions] = useState({});
+  const [fileList, setFileList] = useState([]);
+  const [visibleUpload, setVisibleUpload] = useState(false);
+
   useEffect(() => {
     getList();
     getPermission();
@@ -147,6 +151,10 @@ const User = ({ isMobile, intl, headerPage }) => {
       placement: 'bottomRight',
       style: { background: color },
     });
+  };
+
+  const onChangeFile = (newFileList) => {
+    console.log('fileList', newFileList.fileList);
   };
 
   const handleTableChange = (pagination, filters, sorter) => {
@@ -732,6 +740,7 @@ const User = ({ isMobile, intl, headerPage }) => {
       ),
     },
   ];
+
   return (
     <>
       {permissions ? (
@@ -741,32 +750,76 @@ const User = ({ isMobile, intl, headerPage }) => {
             title={<FormattedMessage id="app.user.list.header" />}
             action={
               <React.Fragment>
-                {permissions.isAdd && (
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <Tooltip
                     title={
                       !isMobile &&
-                      intl.formatMessage({ id: 'app.user.create.header' })
+                      intl.formatMessage({ id: 'app.user.upload.download' })
                     }
                   >
                     <Button
-                      icon={
-                        <i
-                          className="fas fa-plus"
-                          style={{ marginRight: '5px' }}
-                        />
-                      }
-                      onClick={() => {
-                        setVisibleDrawer(!visibleDrawer);
-                        setDataEdit({});
-                      }}
+                      icon={<i className="fas fa-download" />}
+                      type="primary"
+                      // onClick={this.showModalUpload}
                     >
-                      {intl.formatMessage(
-                        { id: 'app.title.create' },
-                        { name: '(F2)' }
-                      )}
+                      <a
+                        style={{ color: '#fff' }}
+                        href="https://cdn.fbsbx.com/v/t59.2708-21/246014793_1362519427517699_1060309620781615200_n.xlsx/userImport.xlsx?_nc_cat=102&amp;ccb=1-5&amp;_nc_sid=0cab14&amp;_nc_ohc=Q1Q8VmwfrysAX8nCGZt&amp;_nc_ht=cdn.fbsbx.com&amp;oh=42bbe1c356af3e278b5c1216ae268bd7&amp;oe=6175F093&amp;dl=1"
+                        target="blank"
+                      >
+                        &nbsp;{' '}
+                        {intl.formatMessage({ id: 'app.user.upload.download' })}
+                      </a>
                     </Button>
                   </Tooltip>
-                )}
+                  <Tooltip
+                    title={
+                      !isMobile &&
+                      intl.formatMessage({ id: 'app.user.upload.import' })
+                    }
+                  >
+                    <Button
+                      style={{ marginLeft: 10 }}
+                      icon={
+                        <i
+                          style={{ marginRight: 10 }}
+                          className="fas fa-file-import"
+                        ></i>
+                      }
+                      type="primary"
+                      onClick={() => setVisibleUpload(!visibleUpload)}
+                    >
+                      {intl.formatMessage({ id: 'app.user.upload.import' })}
+                    </Button>
+                  </Tooltip>
+                  {permissions.isAdd && (
+                    <Tooltip
+                      title={
+                        !isMobile &&
+                        intl.formatMessage({ id: 'app.user.create.header' })
+                      }
+                    >
+                      <Button
+                        style={{ marginLeft: 10 }}
+                        icon={
+                          <i
+                            className="fas fa-plus"
+                            style={{ marginRight: '5px' }}
+                          />
+                        }
+                        onClick={() => {
+                          setVisibleDrawer(!visibleDrawer);
+                          setDataEdit({});
+                        }}
+                      >
+                        {intl.formatMessage(
+                          { id: 'app.title.create' },
+                          { name: '(F2)' }
+                        )}
+                      </Button>
+                    </Tooltip>
+                  )}
+                </div>
               </React.Fragment>
             }
           >
@@ -792,6 +845,7 @@ const User = ({ isMobile, intl, headerPage }) => {
             >
               {renderForm()}
             </Modal>
+
             <Table
               loading={loading}
               rowKey="id"
@@ -821,6 +875,12 @@ const User = ({ isMobile, intl, headerPage }) => {
         visible={visibleDrawer}
         titleDrawer={intl.formatMessage({ id: 'app.user.list.title' })}
         dataEdit={dataEdit}
+        getList={getList}
+      />
+      <UploadMultipleUser
+        intl={intl}
+        isMobile={isMobile}
+        visible={visibleUpload}
         getList={getList}
       />
     </>

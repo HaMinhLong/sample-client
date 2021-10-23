@@ -4,6 +4,7 @@ import {
   getListUser,
   getOneUser,
   createUser,
+  createUserByXLSX,
   updateUser,
   updateStatusUser,
   deleteUser,
@@ -35,6 +36,10 @@ function* getOne({ payload: { id }, callback }) {
 }
 function* create({ payload, callback }) {
   const { data } = yield call(createUser, payload);
+  if (callback) callback(data);
+}
+function* createByXLSX({ payload, callback }) {
+  const { data } = yield call(createUserByXLSX, payload);
   if (callback) callback(data);
 }
 function* updateRecord({ payload: { id, params }, callback }) {
@@ -69,6 +74,7 @@ export function* userSaga() {
   yield takeLatest('user/fetch', getList);
   yield takeLatest('user/getOne', getOne);
   yield takeLatest('user/add', create);
+  yield takeLatest('user/xlsx', createByXLSX);
   yield takeLatest('user/fetchLazyLoading', fetchLazyLoading);
   yield takeLatest('user/update', updateRecord);
   yield takeLatest('user/updateStatus', updateStatus);
